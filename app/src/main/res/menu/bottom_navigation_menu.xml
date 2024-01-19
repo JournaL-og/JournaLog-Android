@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--이상원 - 24.01.19-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itm_calendar_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_calendar_home"
+        android:title=""/>
+    <item
+        android:id="@+id/itm_tag"
+        android:enabled="true"
+        android:icon="@drawable/ic_tag"
+        android:title=""/>
+    <item
+        android:id="@+id/itm_photo"
+        android:enabled="true"
+        android:icon="@drawable/ic_photo"
+        android:title=""/>
+    <item
+        android:id="@+id/itm_setting"
+        android:enabled="true"
+        android:icon="@drawable/ic_setting"
+        android:title=""/>
+</menu>
