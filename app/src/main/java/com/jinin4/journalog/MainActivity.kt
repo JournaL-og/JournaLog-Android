@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
+//        R.id.itm_calendar_home
         setContentView(binding.root)
 
         val navView = binding.bottomNavigation
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(androidx.fragment.R.id.fragment_container_view_tag ,
                             PhotoFragment()
+//                            TestFragment()
                         )
                         .commitAllowingStateLoss()
                     true
@@ -63,6 +64,8 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
 
 
 
