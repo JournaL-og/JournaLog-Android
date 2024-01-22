@@ -79,5 +79,4 @@ class PhotoFragment : Fragment() {
             binding.imageRecyclerView.layoutManager = GridLayoutManager(binding.root.context,3) // 레이아웃 매니저 설정
         }
     }
-
 }

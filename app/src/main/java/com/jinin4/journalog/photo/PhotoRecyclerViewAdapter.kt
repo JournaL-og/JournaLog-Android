@@ -1,6 +1,5 @@
 package com.jinin4.journalog.photo
 
-
 import android.provider.ContactsContract.Contacts.Photo
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,8 +13,6 @@ import com.jinin4.journalog.db.photo.PhotoEntity
 // 이지윤 작성 - 24.01.22
 class PhotoRecyclerViewAdapter(private val photoList : ArrayList<PhotoEntity>) : RecyclerView.Adapter<PhotoRecyclerViewAdapter.PhotoViewHolder>() {
     inner class PhotoViewHolder(binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
-
-//        val tv_title = binding.tvTitle
         val imagePhoto: ImageView = binding.imagePhoto
         val root = binding.root
     }
@@ -31,8 +28,7 @@ class PhotoRecyclerViewAdapter(private val photoList : ArrayList<PhotoEntity>) :
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-//        holder.tv_title.text = "하이하이 테스트입니다."
         holder.imagePhoto.setImageResource(R.drawable.test)
-//        Log.d("PhotoViewHolder",holder)
+
     }
 }

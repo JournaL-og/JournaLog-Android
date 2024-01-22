@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.itm_photo -> {
                     supportFragmentManager.beginTransaction()
                         .replace(androidx.fragment.R.id.fragment_container_view_tag ,
-                            PhotoFragment()
-//                            TestFragment()
+//                            PhotoFragment()
+                            TestFragment()
                         )
                         .commitAllowingStateLoss()
                     true
