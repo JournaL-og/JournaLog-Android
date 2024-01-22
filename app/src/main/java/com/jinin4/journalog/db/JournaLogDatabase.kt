@@ -6,11 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.db.photo.PhotoDao
+import com.jinin4.journalog.db.photo.PhotoEntity
+
 // 이상원 - 24.01.19
-@Database(entities = [MemoEntity::class], version = 1)
+@Database(entities = [MemoEntity::class, PhotoEntity::class], version = 1)
 abstract class JournaLogDatabase : RoomDatabase() {
     abstract fun getMemoDao(): MemoDao
-
+    // 이지윤 추가 - 24.01.22
+    abstract fun getPhotoDao(): PhotoDao
     companion object {
         val databaseName = "journalog"
         var journaLogDatabase: JournaLogDatabase? = null
@@ -18,7 +22,8 @@ abstract class JournaLogDatabase : RoomDatabase() {
         fun getInstance(context: Context): JournaLogDatabase? {
             if (journaLogDatabase == null) {
                 journaLogDatabase = Room.databaseBuilder(
-                    context, JournaLogDatabase::class.java, databaseName).build()
+                    context, JournaLogDatabase::class.java, databaseName)
+                    .build()
             }
             return journaLogDatabase
         }

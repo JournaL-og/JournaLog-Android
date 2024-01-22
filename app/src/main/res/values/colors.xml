@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="mint">#52D1E1</color>
     <color name="note">#E8B313</color>
+    <color name="invisible">#00000000</color>
 </resources>
