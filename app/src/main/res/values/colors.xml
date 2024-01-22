@@ -3,6 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mint">#52D1E1</color>
-    <color name="note">#E8B313</color>
     <color name="invisible">#00000000</color>
+    <color name="note">#FFF59D</color>
+    <color name="my_light_primary">#A4A59A</color>
+    <color name="colorPrimary">#A4A59A</color>
+    <color name="colorPrimaryDark">#A4A59A</color>
+    <color name="colorAccent">#A4A59A</color>
+    <color name="red">#E91E63</color>
+    <color name="y_gray">#E2E4ED</color>
+
 </resources>

@@ -68,6 +68,16 @@ class TestFragment : Fragment() {
 
 
 
+        Thread{
+            val memo1 = memoDao.getMemoById(1)
+
+            requireActivity().runOnUiThread{
+                binding.testIdDe.text = memo1.content
+            }
+        }.start()
+
+
+
 
 
 
