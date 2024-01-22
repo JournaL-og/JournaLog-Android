@@ -33,19 +33,13 @@ class CalendarFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =FragmentCalendarBinding.inflate(inflater, container, false)
+        binding = FragmentCalendarBinding.inflate(inflater, container, false)
 
         val calendarView: MaterialCalendarView = binding.calendarView
         calendarView.topbarVisible = false // topbar 삭제
 
-
-
 //        calendarView.setBackgroundColor(resources.getColor(R.color.note))
         val formatter_hangul = DateTimeFormatter.ofPattern("M월 dd일 (EE)")
-
-
-//        binding.tvSelectedDate.text=calendarView.selectedDate!!.date.format(formatter) // 초기 좌상단 날짜 설정
-
 
 
         db = JournaLogDatabase.getInstance(binding.root.context)!!
@@ -53,15 +47,15 @@ class CalendarFragment : Fragment() {
         calendarView.setOnDateChangedListener { widget, date, selected ->
             binding.tvSelectedDate.text = date.date.format(formatter_hangul) // 날짜 클릭 시 좌상단 날짜 변경
 //            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
-
             getMemos(date)
 
         }
-        getMemos(CalendarDay.today())
-//        calendarView.setSelectedDate(CalendarDay.today()) //오늘 날짜 자동 선택
-//        calendarView.setDateSelected(CalendarDay.today() )
-        calendarView.selectedDate = CalendarDay.today()
 
+        calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 선택하기
+        getMemos(CalendarDay.today()) //오늘 메모 가져오기
+        binding.tvSelectedDate.text=calendarView.selectedDate!!.date.format(formatter_hangul)// 초기 좌상단 날짜 설정
+//        calendarView.setSelectedDate(CalendarDay.today())
+//        calendarView.setDateSelected(CalendarDay.today() )
 
         // 날짜 아래에 점 찍기
         val todayDecorator = EventDecorator(5f, Color.GRAY, setOf(CalendarDay.today()))
@@ -120,6 +114,11 @@ class CalendarFragment : Fragment() {
             binding.recyclerView.layoutManager = LinearLayoutManager(binding.root.context) // 레이아웃 매니저 설정
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        getMemos(binding.calendarView.selectedDate!!)
+//    }
 
 
 
