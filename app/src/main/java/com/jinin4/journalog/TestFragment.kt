@@ -65,8 +65,12 @@ class TestFragment : Fragment() {
                 }
             }.start()
         }
-
-
+        //최성혁 - 24.01.22
+        binding.btnDeleteDb.setOnClickListener {
+            Thread{
+                memoDao.deleteAllMemos()
+            }.start()
+        }
 
         Thread{
             val memo1 = memoDao.getMemoById(1)

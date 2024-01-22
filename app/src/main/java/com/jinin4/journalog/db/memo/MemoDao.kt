@@ -44,6 +44,10 @@ interface MemoDao {
     @Delete
     fun deleteMemo(memo: MemoEntity)
 
+    // 최성혁 - 24.01.22
+    @Query("DELETE FROM memo")
+    fun deleteAllMemos()
+
     @Update
     fun updateMemo(memo: MemoEntity)
 }

@@ -3,16 +3,108 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray">
+    <!-- 상단 탭 바 -->
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tag_tabs"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="태그 페이지 코딩 필요!"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@android:color/transparent"
+        tools:layout_editor_absoluteX="0dp" />
 
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:layout_width="261dp"
+        android:layout_height="33dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/tag_tabs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/tag_tabs"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ImageButton
+            android:id="@+id/imageButton12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_check_all" />
+
+        <ImageButton
+            android:id="@+id/red_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_red_circle" />
+
+        <ImageButton
+            android:id="@+id/orange_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginStart="12dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_orange_circle" />
+
+        <ImageButton
+            android:id="@+id/yellow_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_yellow_circle" />
+
+        <ImageButton
+            android:id="@+id/green_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_green_circle" />
+
+        <ImageButton
+            android:id="@+id/blue_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_blue_circle" />
+
+        <ImageButton
+            android:id="@+id/indigo_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_indigo_circle" />
+
+        <ImageButton
+            android:id="@+id/pupple_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_pupple_circle" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tagRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="456dp"
+        android:gravity="center"
+        android:numColumns="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tag_tabs"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/tag_memo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
