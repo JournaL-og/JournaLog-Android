@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--  이지윤 작성 - 24.01.22  -->
     <ImageView
@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1:1"
-        android:background="@drawable/imageview_border"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="사진 설명" />
+        android:src="@drawable/test"
+        android:scaleType="centerCrop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

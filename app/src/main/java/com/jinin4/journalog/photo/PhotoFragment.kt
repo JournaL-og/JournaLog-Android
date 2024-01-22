@@ -33,6 +33,7 @@ class PhotoFragment : Fragment() {
 
     lateinit var db: JournaLogDatabase
     lateinit var photoDao: PhotoDao
+    lateinit var photoList: ArrayList<PhotoEntity>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +54,8 @@ class PhotoFragment : Fragment() {
             Thread{
                 photoDao.insertPhoto(photoEntity)
                 requireActivity().runOnUiThread{
+                    photoList.add(photoEntity)
+                    adapter.notifyItemInserted(photoList.size - 1) // 어댑터에 새 아이템 추가 알림
                     Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
                 }
             }.start()
@@ -64,15 +67,17 @@ class PhotoFragment : Fragment() {
 
     private fun getAllPhotoList() {
         Thread {
+            photoList = ArrayList(photoDao.getAllPhotos())
             setRecyclerView()
         }.start()
     }
 
     private fun setRecyclerView() {
         requireActivity().runOnUiThread {
-            adapter = PhotoRecyclerViewAdapter() // ❷ 어댑터 객체 할당
+            adapter = PhotoRecyclerViewAdapter(photoList) // ❷ 어댑터 객체 할당
             binding.imageRecyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.imageRecyclerView.layoutManager = GridLayoutManager(binding.root.context,3) // 레이아웃 매니저 설정
         }
     }
+
 }
