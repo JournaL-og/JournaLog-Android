@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jinin4.journalog.R
 import com.jinin4.journalog.databinding.FragmentCalendarBinding
@@ -15,11 +16,15 @@ import com.jinin4.journalog.db.memo.MemoEntity
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 //이상원 - 24.01.19
-class CalendarFragment : Fragment() {
+class CalendarFragment : Fragment(),MemoInsertCallback {
 
     private lateinit var binding: FragmentCalendarBinding
     private lateinit var adapter: CalendarMemoRecyclerViewAdapter
@@ -58,8 +63,7 @@ class CalendarFragment : Fragment() {
 //        calendarView.setDateSelected(CalendarDay.today() )
 
         // 날짜 아래에 점 찍기
-        val todayDecorator = EventDecorator(5f, Color.GRAY, setOf(CalendarDay.today()))
-        calendarView.addDecorator(todayDecorator)
+        dotCalendar()
 
 
 //        val otherDayDecorator = EventDecorator(5f, Color.BLUE, setOf(CalendarDay.today()))
@@ -86,9 +90,10 @@ class CalendarFragment : Fragment() {
         }
 
         binding.fabAddMemo.setOnClickListener{
-            val modal = ModalBottomSheet(calendarView.selectedDate!!)
+            val modal = MemoCreateBottomSheet(calendarView.selectedDate!!,this)
             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
-            modal.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
+            modal.setTargetFragment(this, 1)
+            modal.show(requireActivity().supportFragmentManager, MemoCreateBottomSheet.TAG)
         }
 
 
@@ -115,10 +120,39 @@ class CalendarFragment : Fragment() {
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        getMemos(binding.calendarView.selectedDate!!)
+    override fun onMemoInserted() {
+        // 모달에서 성공적으로 메모를 추가했을 때의 처리
+        getMemos(binding.calendarView.selectedDate!!)
+        dotCalendar()
+    }
+
+//    fun dotCalendar() {
+//        var decorator: EventDecorator? = null
+//        var DateList : List<CalendarDay>? = null
+//        Thread {
+//            DateList =   memoDao.getDistinctCalendarDays()
+//        }.start()
+//
+//        decorator = EventDecorator(5f, Color.GRAY, DateList ?: setOf())
+//        binding.calendarView.addDecorator(decorator)
 //    }
+
+    fun dotCalendar() {
+        var decorator: EventDecorator? = null
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val dateList = memoDao.getDistinctCalendarDays()
+            withContext(Dispatchers.Main) {
+                decorator = EventDecorator(5f, Color.GRAY, convertDateList(dateList))
+                binding.calendarView.addDecorator(decorator)
+            }
+        }
+    }
+
+    private fun convertDateList(dateList: List<String>): Set<CalendarDay> {
+        return dateList.map { CalendarDay.from(LocalDate.parse(it)) }.toSet()
+    }
+
 
 
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--  이상원 작성 - 24.01.22  -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -33,8 +34,9 @@
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="메모 테스트!!!!!!!qenlkfqenfqfㅂㄷ뤕둘klqefnqfqenklfqenqeklfqenkflqefnklqeqefqegqegeqfeq jkfqejkfnjk"
+            android:padding="15dp"
+            android:gravity="start"
+            android:text="메모 테스트!!!!!!!메모 테스트!!!!!!!메모 테스트!!!!!!!메모 테스트!!!!!!!메모 테스트!!!!!!!"
             app:layout_constraintEnd_toStartOf="@id/guideline_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,15 +45,15 @@
             android:id="@+id/gridView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnWidth="100dp"
+            android:columnWidth="90dp"
             android:gravity="center"
-            android:numColumns="4"
-            android:stretchMode="columnWidth"
+            android:numColumns="auto_fit"
             android:padding="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_content"
+            android:stretchMode="columnWidth"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline_content"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_content"

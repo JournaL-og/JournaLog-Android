@@ -1,52 +1,80 @@
 package com.jinin4.journalog.calendar
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.jinin4.journalog.R
-import com.jinin4.journalog.databinding.BottomSheetModalBinding
-import com.jinin4.journalog.databinding.FragmentCalendarBinding
+import com.jinin4.journalog.databinding.BottomSheetMemoCreateBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ModalBottomSheet(val selectedDate: CalendarDay) : BottomSheetDialogFragment()  {
+// 이상원 - 24.01.22
+class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoInsertCallback) : BottomSheetDialogFragment()  {
 
-    private lateinit var binding: BottomSheetModalBinding
+    private lateinit var binding: BottomSheetMemoCreateBinding
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
     private val storageRef: StorageReference = firebaseStorage.reference
 
     lateinit var db: JournaLogDatabase
     lateinit var memoDao: MemoDao
-
+    lateinit var strDateTime : String
+    lateinit var strDateMonthDay : String
+    lateinit var str_time : String
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding =BottomSheetModalBinding.inflate(inflater, container, false)
+        binding = BottomSheetMemoCreateBinding.inflate(inflater, container, false)
 
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         memoDao = db.getMemoDao()
-        val editText = binding.edtContent
-        val formatter_datetime = org.threeten.bp.format.DateTimeFormatter.ofPattern("MM-dd")
-        binding.txtDate.text = selectedDate.date.format(formatter_datetime).toString()
+
+
+        val formatterMonthDay = org.threeten.bp.format.DateTimeFormatter.ofPattern("MM월 dd일")
+        strDateMonthDay = selectedDate.date.format(formatterMonthDay).toString()
+        binding.txtDate.text = strDateMonthDay
+
+
+        val currentDateTime = LocalDateTime.now()
+        val currTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        str_time = currentDateTime.format(currTimeFormatter)
+        binding.txtTime.text = str_time
+
+        val formatterDate = org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        strDateTime = selectedDate.date.format(formatterDate).toString()
+
         binding.fabMemoInsert.setOnClickListener{
             insertMemo()
         }
+
+        binding.txtDate.setOnClickListener {
+
+        }
+
+        binding.btnGallery.setOnClickListener{
+            openGallery()
+        }
+
 
         return binding.root
     }
@@ -63,7 +91,7 @@ class ModalBottomSheet(val selectedDate: CalendarDay) : BottomSheetDialogFragmen
             editText.requestFocus()
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-        }, 250)
+        }, 300)
     }
 
     fun insertMemo() {
@@ -80,13 +108,14 @@ class ModalBottomSheet(val selectedDate: CalendarDay) : BottomSheetDialogFragmen
                 }
         } else {
             Thread{
-                var memoEntity = MemoEntity(null, edtCon, formattedDateTime, 1)
+                var memoEntity = MemoEntity(null, edtCon, "${strDateTime} ${str_time}:00", 1)
                 // 일단 현재 시각으로 넣음, 일단 컬러 id 1로 넣음
-                memoDao.insertMemo(memoEntity)
+                val insertedMemoId = memoDao.insertMemo(memoEntity).toInt()
 //                requireActivity().runOnUiThread{
 //                    Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
 //                }
                 requireActivity().runOnUiThread {
+                    callback.onMemoInserted()
                     dismiss()
                 }
             }.start()
@@ -94,4 +123,16 @@ class ModalBottomSheet(val selectedDate: CalendarDay) : BottomSheetDialogFragmen
 
 
     }
+
+    private val REQUEST_IMAGE_PICK = 2
+
+// ...
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(intent, REQUEST_IMAGE_PICK)
+    }
+
+
 }
