@@ -25,7 +25,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/ic_cal_today"
         android:layout_marginRight="5dp"
-        android:backgroundTint="#FCE8FF"
         />
 <!--    android:backgroundTint="#FDF6FE"-->
     <ImageButton
@@ -35,7 +34,6 @@
         app:layout_constraintEnd_toStartOf="@id/btn_today"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/ic_calendar"
-        android:backgroundTint="#FCE8FF"
         />
 
 
@@ -43,16 +41,18 @@
         android:id="@+id/calendarView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_selectedDate"
-        app:mcv_selectionColor="@color/note"
-        app:mcv_showOtherDates="decorated_disabled"
-        android:background="@drawable/rounded_border"
-
-
+        app:mcv_selectionColor="@color/y_gray"
+        app:mcv_showOtherDates="all|decorated_disabled"
+        android:background="@drawable/rounded_calendar_background"
+        app:mcv_calendarMode="week"
         />
+<!--    app:layout_constraintHeight_max="300dp"-->
+    <!--   mcv_selectionColor - 선택 시 배경색 -->
     <!--        app:mcv_tileHeight="48dp"-->
 
     <androidx.recyclerview.widget.RecyclerView
@@ -66,18 +66,33 @@
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_calendar_memo" />
 
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab_add_memo"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:layout_marginEnd="28dp"-->
+<!--        android:layout_marginBottom="208dp"-->
+<!--        android:backgroundTint="#EAC042"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_add"-->
+
+<!--        />-->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/fab_add_memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="208dp"
-        android:backgroundTint="#EAC042"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_pencil"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add"
+        app:shapeAppearance="@style/ThemeOverlay.Material3.FloatingActionButton.Primary"
         />
+<!--    style="?attr/floatingActionButtonLargeStyle"-->
 </androidx.constraintlayout.widget.ConstraintLayout>
 

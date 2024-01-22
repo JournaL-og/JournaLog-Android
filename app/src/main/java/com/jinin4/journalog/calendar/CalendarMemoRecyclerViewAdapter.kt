@@ -4,12 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jinin4.journalog.databinding.ItemCalendarMemoBinding
+import com.jinin4.journalog.db.memo.MemoDao
+import com.jinin4.journalog.db.memo.MemoEntity
 
 // 이상원 - 24.01.19
-class CalendarMemoRecyclerViewAdapter : RecyclerView.Adapter<CalendarMemoRecyclerViewAdapter.MemoViewHolder>() {
+class CalendarMemoRecyclerViewAdapter(
+    private val memoList: List<MemoEntity>
+): RecyclerView.Adapter<CalendarMemoRecyclerViewAdapter.MemoViewHolder>() {
     inner class MemoViewHolder(binding: ItemCalendarMemoBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val tv_title = binding.tvTitle
+        val timestamp = binding.tvTimestamp
+        val content = binding.tvContent
+        val imageGrid = binding.gridView
         val root = binding.root
     }
 
@@ -20,10 +26,16 @@ class CalendarMemoRecyclerViewAdapter : RecyclerView.Adapter<CalendarMemoRecycle
     }
 
     override fun getItemCount(): Int {
-        return 1
+        return memoList.size
     }
 
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
-//        holder.tv_title.text = "하이하이 테스트입니다."
+
+        val memoData = memoList[position]
+        when (memoData.color_id) {
+            // 컬러ID에 따라 오른쪽 부분 색상 변경하는 로직~!
+        }
+        holder.timestamp.text = memoData.timestamp
+        holder.content.text = memoData.content
     }
 }

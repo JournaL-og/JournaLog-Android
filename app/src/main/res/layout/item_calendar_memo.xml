@@ -1,19 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_timestamp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="메모 테스트!!!!!!!!!"
+        android:background="@drawable/rounded_textview_background_timestamp"
+        android:padding="5dp"
+        android:text="10:52"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/innerHorizontalContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/rounded_textview_background_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_timestamp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="메모 테스트!!!!!!!qenlkfqenfqfㅂㄷ뤕둘klqefnqfqenklfqenqeklfqenkflqefnklqeqefqegqegeqfeq jkfqejkfnjk"
+            app:layout_constraintEnd_toStartOf="@id/guideline_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--        android:background="@drawable/rounded_textview_background_content"-->
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnWidth="100dp"
+            android:gravity="center"
+            android:numColumns="4"
+            android:stretchMode="columnWidth"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content"
+            app:layout_constraintEnd_toStartOf="@id/guideline_content"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.92" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/ll_content"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/rounded_textview_background_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tv_timestamp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:padding="15dp">-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_title"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:text="메모 테스트!!!!!!!qenlkfqenfklqefnqfqenklfqenqeklfqenkflqefnklqeqefqegqegeqfeq jkfqejkfnjk" />-->
+<!--&lt;!&ndash;        android:background="@drawable/rounded_textview_background_content"&ndash;&gt;-->
+<!--        <GridView-->
+<!--            android:id="@+id/gridView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:columnWidth="100dp"-->
+<!--            android:gravity="center"-->
+<!--            android:numColumns="4"-->
+<!--            android:stretchMode="columnWidth" />-->
+<!--    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
