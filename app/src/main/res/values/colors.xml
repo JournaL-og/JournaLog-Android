@@ -3,5 +3,21 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mint">#52D1E1</color>
-    <color name="note">#E8B313</color>
+    <color name="invisible">#00000000</color>
+    <color name="note">#FFF59D</color>
+    <color name="my_light_primary">#A4A59A</color>
+    <color name="colorPrimary">#A4A59A</color>
+    <color name="colorPrimaryDark">#A4A59A</color>
+    <color name="colorAccent">#A4A59A</color>
+
+    <color name="y_gray">#E2E4ED</color>
+
+    <color name="red_sw">#E91E63</color>
+    <color name="orange_sw">#FF8A65</color>
+    <color name="yellow_sw">#FFF176</color>
+    <color name="green_sw">#66BB6A</color>
+    <color name="blue_sw">#42A5F5</color>
+    <color name="navi_sw">#1A2060</color>
+    <color name="purple_sw">#B39DDB</color>
+
 </resources>

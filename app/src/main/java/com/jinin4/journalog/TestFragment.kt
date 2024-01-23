@@ -72,13 +72,13 @@ class TestFragment : Fragment() {
             }.start()
         }
 
-        Thread{
-            val memo1 = memoDao.getMemoById(1)
-
-            requireActivity().runOnUiThread{
-                binding.testIdDe.text = memo1.content
-            }
-        }.start()
+//        Thread{
+//            val memo1 = memoDao.getMemoById(1)
+//
+//            requireActivity().runOnUiThread{
+//                binding.testIdDe.text = memo1.content
+//            }
+//        }.start()
 
 
 
