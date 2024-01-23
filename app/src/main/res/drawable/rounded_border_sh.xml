@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--  이상원 작성 - 24.01.22  -->
+<!--  최성혁 작성 - 24.01.22  -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/white" /> <!-- 배경 색상 지정 -->
     <corners android:radius="10dp" /> <!-- 테두리의 동그란 정도를 지정 -->

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--최성혁 - 24.01.22-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_tag"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
     android:layout_margin="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/rounded_border_sh">
+    android:background="@drawable/rounded_textview_background_content_fixcolor">
 
     <TextView
         android:id="@+id/tagview_memo_content"
