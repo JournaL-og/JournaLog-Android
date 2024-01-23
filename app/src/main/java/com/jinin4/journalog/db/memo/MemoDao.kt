@@ -17,11 +17,12 @@ interface MemoDao {
     @Query("select memo_id,content,timestamp,color_id from memo")
     fun getAllMemo(): List<MemoEntity>
 
-    @Query("select memo_id,content,timestamp,color_id from memo where color_id = :color_id")
-    fun getMemoColorId(color_id: Int): List<MemoEntity>
 
     @Query("select memo_id,content,timestamp,color_id from memo where memo_id = :id")
     fun getMemoById(id: Int): MemoEntity
+    // 최성혁 수정 - 24.01.22
+    @Query("select memo_id,content,timestamp,color_id from memo where color_id = :id")
+    fun getMemosByColorId(id: Int): List<MemoEntity>
 
 //    @Query("select memo_id,content,date(timestamp),color_id from memo where timestamp = :timestamp")
 //    fun getMemoByTimestamp(timestamp: String): List<MemoEntity>
@@ -43,6 +44,10 @@ interface MemoDao {
 
     @Delete
     fun deleteMemo(memo: MemoEntity)
+
+    // 최성혁 - 24.01.22
+    @Query("DELETE FROM memo")
+    fun deleteAllMemos()
 
     @Update
     fun updateMemo(memo: MemoEntity)
