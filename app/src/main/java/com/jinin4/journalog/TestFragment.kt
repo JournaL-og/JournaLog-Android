@@ -56,7 +56,7 @@ class TestFragment : Fragment() {
             val formattedDateTime = currentDateTime.format(formatter)
 
             // sqlite 에는 Date 타입이 없어 스트링으로 넣어야 함!! 참고하세요
-            var memoEntity = MemoEntity(null, "아 아주 나른한 오후네요", formattedDateTime, 1)
+            var memoEntity = MemoEntity(null, "남색이요오", formattedDateTime, 4)
 
             Thread{
                 memoDao.insertMemo(memoEntity)

@@ -21,7 +21,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 //이상원 - 24.01.19
-//최성혁 - 24.01.22
+//최성혁 - 수정 24.01.22
 class TagFragment : Fragment() {
 
     lateinit var db: JournaLogDatabase
@@ -42,26 +42,21 @@ class TagFragment : Fragment() {
 //        binding.btnCallDb.setOnClickListener {
 //            insertMemo()
 //        }
-
+        // default 전체 데이터
         getAllMemoList()
+        binding.entireBtn.setOnClickListener { getAllMemoList() }
+
+        // getMemoByColorId
+        binding.redBtn.setOnClickListener { filterMemosByColorId(1) }
+        binding.orangeBtn.setOnClickListener { filterMemosByColorId(2) }
+        binding.yellowBtn.setOnClickListener { filterMemosByColorId(3) }
+        binding.greenBtn.setOnClickListener { filterMemosByColorId(4) }
+        binding.blueBtn.setOnClickListener { filterMemosByColorId(5) }
+        binding.indigoBtn.setOnClickListener { filterMemosByColorId(6) }
+        binding.puppleBtn.setOnClickListener { filterMemosByColorId(7) }
+
         return binding.root
     }
-
-//    private fun insertMemo() {
-//        val koreaTimeZone = ZoneId.of("Asia/Seoul")
-//        val currentDateTime = LocalDateTime.now(koreaTimeZone)
-//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-//        val formattedDateTime = currentDateTime.format(formatter)
-//        var memoEntity = MemoEntity(null, "아 아주 나른한 오후네요", formattedDateTime, 1)
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            memoDao.insertMemo(memoEntity)
-//            withContext(Dispatchers.Main) {
-//                Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
-//                getAllMemoList() // 새로운 데이터로 RecyclerView 업데이트
-//            }
-//        }
-//    }
 
     private fun getAllMemoList() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -72,9 +67,20 @@ class TagFragment : Fragment() {
         }
     }
 
+    private fun filterMemosByColorId(colorId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val filteredMemos = memoDao.getMemosByColorId(colorId)
+            withContext(Dispatchers.Main) {
+                setRecyclerView(filteredMemos)
+            }
+        }
+    }
+
     private fun setRecyclerView(memoList: List<MemoEntity>){
         adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList))
         binding.tagRecyclerView.adapter = adapter
         binding.tagRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
     }
+
+
 }

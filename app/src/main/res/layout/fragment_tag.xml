@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/y_gray">
     <!-- 상단 탭 바 -->
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tag_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@android:color/transparent"
+        android:background="@color/white"
         tools:layout_editor_absoluteX="0dp" />
 
     <LinearLayout
@@ -25,70 +24,85 @@
         app:layout_constraintTop_toTopOf="@+id/tag_tabs"
         app:layout_constraintVertical_bias="1.0">
 
+
         <ImageButton
-            android:id="@+id/imageButton12"
+            android:id="@+id/entire_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_check_all" />
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/red_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_red_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/red_sw"
+            app:cornerRadius="20dp"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/orange_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:layout_marginStart="12dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_orange_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/orange_sw"
+            app:cornerRadius="20dp"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/yellow_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_yellow_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/yellow_sw"
+            app:cornerRadius="20dp"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/green_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_green_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/green_sw"
+            app:cornerRadius="20dp"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/blue_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_blue_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/blue_sw"
+            app:cornerRadius="20dp"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/indigo_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_indigo_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/navi_sw"
+            app:cornerRadius="20dp"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/pupple_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_pupple_circle" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/purple_sw"
+            app:cornerRadius="20dp"/>
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
