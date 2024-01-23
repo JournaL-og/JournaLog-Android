@@ -77,9 +77,13 @@ class TagFragment : Fragment() {
     }
 
     private fun setRecyclerView(memoList: List<MemoEntity>){
-        adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList))
-        binding.tagRecyclerView.adapter = adapter
-        binding.tagRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
+        requireActivity().runOnUiThread {
+            adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList))
+            binding.tagRecyclerView.adapter = adapter
+            binding.tagRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
+        }
+
+
     }
 
 
