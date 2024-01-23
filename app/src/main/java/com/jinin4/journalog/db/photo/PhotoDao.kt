@@ -17,7 +17,7 @@ interface PhotoDao {
     fun getPhotoById(memo_id: Int): List<PhotoEntity>
 
     @Insert
-    fun insertPhoto(photo: PhotoEntity)
+    fun insertPhoto(photo: PhotoEntity): Long
 
     @Delete
     fun deletePhoto(photo: PhotoEntity)

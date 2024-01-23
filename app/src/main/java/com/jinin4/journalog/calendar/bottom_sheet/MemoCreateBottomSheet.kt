@@ -1,14 +1,17 @@
 package com.jinin4.journalog.calendar.bottom_sheet
 
 import MultiImageAdapter
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +29,11 @@ import com.jinin4.journalog.calendar.MemoInsertCallback
 import com.jinin4.journalog.databinding.BottomSheetMemoCreateBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.db.photo.MemoPhotoDao
+import com.jinin4.journalog.db.photo.MemoPhotoEntity
+import com.jinin4.journalog.db.photo.PhotoDao
+import com.jinin4.journalog.db.photo.PhotoEntity
+import com.jinin4.journalog.firebase.storage.FirebaseFileManager
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
 import java.time.LocalDateTime
@@ -41,10 +49,12 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
     lateinit var db: JournaLogDatabase
     lateinit var memoDao: MemoDao
+    lateinit var memoPhotoDao: MemoPhotoDao
+    lateinit var photoDao: PhotoDao
     lateinit var strDateTime : String
     lateinit var strDateMonthDay : String
     lateinit var str_time : String
-    lateinit var adapter: MultiImageAdapter
+    lateinit var imageAdapter: MultiImageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +66,8 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         memoDao = db.getMemoDao()
+        memoPhotoDao = db.getMemoPhotoDao()
+        photoDao = db.getPhotoDao()
 
 
         val layerDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.rounded_textview_background_content) as LayerDrawable
@@ -112,27 +124,58 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         val formattedDateTime = currentDateTime.format(formatter)
         val edtCon = binding.edtContent.text.toString()
 
-
-
-        if (edtCon.isBlank()) {
+        if (edtCon.isBlank() && uriList.isEmpty()) {
             requireActivity().runOnUiThread{
-                    Toast.makeText(binding.root.context, "내용을 입력하세요.", Toast.LENGTH_SHORT).show()
+                    showToast("메모나 사진을 추가해주세요.")
                 }
         } else {
             Thread{
-                var memoEntity = MemoEntity(null, edtCon, "${strDateTime} ${str_time}:00", 3)
+                val memoEntity = MemoEntity(null, edtCon, "${strDateTime} ${str_time}:00", 3)
+
                 // 일단 컬러 id 1로 넣음
                 val insertedMemoId = memoDao.insertMemo(memoEntity).toInt()
-//                requireActivity().runOnUiThread{
-//                    Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
-//                }
+                if (uriList.isNotEmpty()) {
+                    val pathList = uploadImageToFireBaseAndInsertPhoto(uriList)
+                    for ((i, path) in pathList.withIndex()) {
+                        val photoEntity = PhotoEntity(null,insertedMemoId,path)
+                        val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
+                        val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
+                        memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
+                    }
+                }
                 requireActivity().runOnUiThread {
                     callback.onMemoInserted()
                     dismiss()
                 }
             }.start()
         }
+    }
 
+
+    private fun uploadImageToFireBaseAndInsertPhoto(uriList: ArrayList<Uri>): ArrayList<String> {
+//        val serialNumber = Build.SERIAL
+        val androidID: String = Settings.Secure.getString(
+            context?.contentResolver,
+            Settings.Secure.ANDROID_ID
+        ) ?: "default"
+        val pathList = ArrayList<String>()
+        for ((i, uri) in uriList.withIndex()) {
+            val path = "${androidID}/${System.currentTimeMillis()}_${i+1}.jpg"
+            pathList.add(path)
+            FirebaseFileManager.uploadImage(
+                uri,
+                path,
+                onSuccess = {
+
+                },
+                onFailure = { exception ->
+                    // 업로드 실패 시
+                    // TODO: 업로드 실패에 따른 추가 작업 수행
+//                    showToast("이미지 업로드 실패: ${exception.message}")
+                }
+            )
+        }
+        return pathList
 
     }
 
@@ -168,6 +211,10 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
             updateAdapter()
         } else {      // 이미지를 여러장 선택한 경우
             val clipData: ClipData = data.clipData!!
+            if (clipData.itemCount > 12) {
+                showToast("사진은 12장까지 선택할 수 있습니다.")
+                return
+            }
             for (i in 0 until clipData.itemCount) {
                 val imageUri: Uri = clipData.getItemAt(i).uri
                 uriList.add(imageUri)
@@ -179,9 +226,12 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
     private fun updateAdapter() {
         val recyclerView = binding.rvImageSlide
-        adapter = MultiImageAdapter(uriList, binding.root.context)
-        recyclerView.adapter = adapter
+        imageAdapter = MultiImageAdapter(uriList, binding.root.context)
+        recyclerView.adapter = imageAdapter
         recyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
     }
 
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 }
