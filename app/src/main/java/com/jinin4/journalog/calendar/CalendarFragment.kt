@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jinin4.journalog.R
+import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
 import com.jinin4.journalog.databinding.FragmentCalendarBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
@@ -114,7 +115,7 @@ class CalendarFragment : Fragment(),MemoInsertCallback {
     private fun setRecyclerView() {
         // 리사이클러뷰 설정
         requireActivity().runOnUiThread {
-            adapter = CalendarMemoRecyclerViewAdapter(memoList) // ❷ 어댑터 객체 할당
+            adapter = CalendarMemoRecyclerViewAdapter(memoList, true) // ❷ 어댑터 객체 할당
             binding.recyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.recyclerView.layoutManager = LinearLayoutManager(binding.root.context) // 레이아웃 매니저 설정
         }

@@ -1,9 +1,11 @@
-package com.jinin4.journalog.calendar
+package com.jinin4.journalog.calendar.bottom_sheet
 
+import MultiImageAdapter
 import android.app.Activity
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
+import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,20 +13,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.BaseAdapter
-import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.jinin4.journalog.MemoRightColorSetting
+import com.jinin4.journalog.R
+import com.jinin4.journalog.calendar.MemoInsertCallback
 import com.jinin4.journalog.databinding.BottomSheetMemoCreateBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
-import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 // 이상원 - 24.01.22
 class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoInsertCallback) : BottomSheetDialogFragment()  {
@@ -38,6 +44,8 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
     lateinit var strDateTime : String
     lateinit var strDateMonthDay : String
     lateinit var str_time : String
+    lateinit var adapter: MultiImageAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +58,10 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         memoDao = db.getMemoDao()
 
 
+        val layerDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.rounded_textview_background_content) as LayerDrawable
+        binding.edtContent.background=
+            MemoRightColorSetting.changeRightColor(
+                ContextCompat.getColor(binding.root.context, R.color.red_sw),layerDrawable)
         val formatterMonthDay = org.threeten.bp.format.DateTimeFormatter.ofPattern("MM월 dd일")
         strDateMonthDay = selectedDate.date.format(formatterMonthDay).toString()
         binding.txtDate.text = strDateMonthDay
@@ -108,8 +120,8 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
                 }
         } else {
             Thread{
-                var memoEntity = MemoEntity(null, edtCon, "${strDateTime} ${str_time}:00", 1)
-                // 일단 현재 시각으로 넣음, 일단 컬러 id 1로 넣음
+                var memoEntity = MemoEntity(null, edtCon, "${strDateTime} ${str_time}:00", 3)
+                // 일단 컬러 id 1로 넣음
                 val insertedMemoId = memoDao.insertMemo(memoEntity).toInt()
 //                requireActivity().runOnUiThread{
 //                    Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
@@ -124,15 +136,52 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
     }
 
-    private val REQUEST_IMAGE_PICK = 2
 
-// ...
+    private val someActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // 처리할 로직
+                val data: Intent? = result.data
+                handleImageSelection(data)
+
+                // 결과 처리
+                Toast.makeText(binding.root.context, "테스트 성공~", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(binding.root.context, "실패~~", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        startActivityForResult(intent, REQUEST_IMAGE_PICK)
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = MediaStore.Images.Media.CONTENT_TYPE
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
+        someActivityResultLauncher.launch(intent)
+    }
+    private val uriList = ArrayList<Uri>()
+    private fun handleImageSelection(data: Intent?) {
+
+        if (data?.clipData == null) {     // 이미지를 하나만 선택한 경우0
+            val imageUri: Uri = data?.data!!
+            uriList.add(imageUri)
+            updateAdapter()
+        } else {      // 이미지를 여러장 선택한 경우
+            val clipData: ClipData = data.clipData!!
+            for (i in 0 until clipData.itemCount) {
+                val imageUri: Uri = clipData.getItemAt(i).uri
+                uriList.add(imageUri)
+            }
+
+            updateAdapter()
+        }
     }
 
+    private fun updateAdapter() {
+        val recyclerView = binding.rvImageSlide
+        adapter = MultiImageAdapter(uriList, binding.root.context)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
+    }
 
 }

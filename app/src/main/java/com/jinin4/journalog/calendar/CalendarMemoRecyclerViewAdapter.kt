@@ -1,41 +1,74 @@
 package com.jinin4.journalog.calendar
 
+import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.jinin4.journalog.MemoRightColorSetting
+import com.jinin4.journalog.R
 import com.jinin4.journalog.databinding.ItemCalendarMemoBinding
-import com.jinin4.journalog.db.memo.MemoDao
+import com.jinin4.journalog.databinding.ItemCalendarMemoTextBinding
 import com.jinin4.journalog.db.memo.MemoEntity
 
-// 이상원 - 24.01.19
-class CalendarMemoRecyclerViewAdapter(
-    private val memoList: List<MemoEntity>
-): RecyclerView.Adapter<CalendarMemoRecyclerViewAdapter.MemoViewHolder>() {
-    inner class MemoViewHolder(binding: ItemCalendarMemoBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val timestamp = binding.tvTimestamp
-        val content = binding.tvContent
-        val imageGrid = binding.gridView
+// 이상원 - 24.01.23
+class CalendarMemoRecyclerViewAdapter(
+    private val memoList: List<MemoEntity>,
+    private val isOnlyText: Boolean
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        private const val VIEW_TYPE_TEXT = 1
+        private const val VIEW_TYPE_IMAGE = 2
+    }
+
+    private lateinit var binding_: ViewBinding
+
+    inner class MemoViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+        val timestamp = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvTimestamp else (binding as ItemCalendarMemoBinding).tvTimestamp
+        val content = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvContent else (binding as ItemCalendarMemoBinding).tvContent
+        val imageGrid = if (isOnlyText) null else (binding as ItemCalendarMemoBinding).gridView
         val root = binding.root
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
-        val binding: ItemCalendarMemoBinding = ItemCalendarMemoBinding
-                                    .inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val binding: ViewBinding = when (viewType) {
+            VIEW_TYPE_TEXT -> ItemCalendarMemoTextBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            VIEW_TYPE_IMAGE -> ItemCalendarMemoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            else -> throw IllegalArgumentException("Unsupported view type")
+        }
+        binding_ = binding
         return MemoViewHolder(binding)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (isOnlyText) VIEW_TYPE_TEXT else VIEW_TYPE_IMAGE
     }
 
     override fun getItemCount(): Int {
         return memoList.size
     }
 
-    override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
-
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val memoData = memoList[position]
-        when (memoData.color_id) {
-            // 컬러ID에 따라 오른쪽 부분 색상 변경하는 로직~!
+        val layerDrawable = ContextCompat.getDrawable((holder as MemoViewHolder).root.context, R.drawable.rounded_textview_background_content) as LayerDrawable
+        val memoColor =  when (memoData.color_id) {
+            1 -> R.color.red_sw
+            2 -> R.color.orange_sw
+            3 -> R.color.yellow_sw
+            4 -> R.color.green_sw
+            5 -> R.color.blue_sw
+            6 -> R.color.navi_sw
+            7 -> R.color.purple_sw
+            else -> R.color.red_sw
         }
-        holder.timestamp.text = memoData.timestamp
-        holder.content.text = memoData.content
+
+        (holder as MemoViewHolder).content.background =
+            MemoRightColorSetting.changeRightColor(
+                ContextCompat.getColor(binding_.root.context, memoColor),layerDrawable)
+        (holder as MemoViewHolder).timestamp.text = memoData.timestamp
+        (holder as MemoViewHolder).content.text = memoData.content
     }
 }
