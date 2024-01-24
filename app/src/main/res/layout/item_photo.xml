@@ -12,7 +12,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/test"
+        android:src="@drawable/skeleton_img"
+        android:layout_margin="1dp"
+        android:background="#eeeeee"
         android:scaleType="centerCrop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
