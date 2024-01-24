@@ -49,7 +49,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_selectedDate"
+        app:layout_constraintTop_toBottomOf="@id/btn_today"
         app:mcv_selectionColor="?attr/pickcolor"
         app:mcv_showOtherDates="all|decorated_disabled"
         android:background="@drawable/rounded_calendar_background"
