@@ -18,7 +18,7 @@ import com.jinin4.journalog.R
 import com.jinin4.journalog.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-// 반정현 - 24.01.22
+// 반정현 작성 - 24.01.22
 class FontPreferenceFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.font_preference, rootKey)

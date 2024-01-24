@@ -5,7 +5,7 @@
     android:id="@+id/preferences_detail"
 
     >
-
+    <!-- 반정현 작성 - 24.01.23-->
 
     <ListPreference
         app:title="글꼴"
@@ -17,8 +17,7 @@
     <SeekBarPreference
         app:title="크기"
         app:key="fontSize"
-        app:defaultValue="12"
-        app:min="10"
+        app:defaultValue="50"
      />
 
 

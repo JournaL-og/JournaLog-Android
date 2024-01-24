@@ -21,7 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-//최성혁 - 24.01.22
+//최성혁 - 24.01.22, 반정현 수정 - 24.01.24
 class TagMemoRecyclerViewAdapter(private val memoList : ArrayList<MemoEntity>) : RecyclerView.Adapter<TagMemoRecyclerViewAdapter.TagMemoViewHolder>(){
 
     inner class TagMemoViewHolder(binding: TagMemoBinding) : RecyclerView.ViewHolder(binding.root){
@@ -54,7 +54,7 @@ class TagMemoRecyclerViewAdapter(private val memoList : ArrayList<MemoEntity>) :
             7 -> R.color.purple_sw
             else -> R.color.red_sw
         }
-
+        // 폰트 적용
         val context = holder.itemView.context
 
         GlobalScope.launch {
