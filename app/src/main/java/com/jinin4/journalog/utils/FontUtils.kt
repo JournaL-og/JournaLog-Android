@@ -22,7 +22,11 @@ object FontUtils {
     }
     suspend fun getFontSize(context: Context): Float {
         val fontSize = context.dataStore.data.first().fontSize ?: 16
-        return fontSize.toFloat()
+        return when {
+            fontSize <= 12 -> 12.toFloat()
+            fontSize >= 30 -> 30.toFloat()
+            else -> fontSize.toFloat()
+        }
     }
 
     fun applyFont(view: View, typeface: Typeface?, fontSize: Float) {

@@ -29,7 +29,7 @@ class CalendarMemoRecyclerViewAdapter(
         private const val VIEW_TYPE_IMAGE = 2
     }
 
-    private lateinit var binding_: ViewBinding
+//    private lateinit var binding_: ViewBinding
 
     inner class MemoViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val timestamp = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvTimestamp else (binding as ItemCalendarMemoBinding).tvTimestamp
@@ -44,7 +44,7 @@ class CalendarMemoRecyclerViewAdapter(
             VIEW_TYPE_IMAGE -> ItemCalendarMemoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
-        binding_ = binding
+//        binding_ = binding
         return MemoViewHolder(binding)
     }
 
@@ -80,11 +80,10 @@ class CalendarMemoRecyclerViewAdapter(
             }
         }
 
-
-        (holder as MemoViewHolder).content.background =
+        holder.content.background =
             MemoRightColorSetting.changeRightColor(
-                ContextCompat.getColor(binding_.root.context, memoColor),layerDrawable)
-        (holder as MemoViewHolder).timestamp.text = memoData.timestamp
-        (holder as MemoViewHolder).content.text = memoData.content
+                ContextCompat.getColor(holder.root.context, memoColor),layerDrawable)
+        holder.timestamp.text = memoData.timestamp
+        holder.content.text = memoData.content
     }
 }

@@ -10,7 +10,9 @@ import com.jinin4.journalog.R
 
 
 // 이상원 - 24.01.23
-class MultiImageAdapter(private val list: ArrayList<Uri>, private val context: Context) :
+class MultiImageAdapter(
+    private val list: ArrayList<Uri>,
+    private val context: Context) :
     RecyclerView.Adapter<MultiImageAdapter.ViewHolder>() {
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
