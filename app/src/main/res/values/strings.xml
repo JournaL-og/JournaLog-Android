@@ -2,5 +2,7 @@
     <string name="app_name">JournaLog</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="font_preview">Preview\n오늘은 고요한 저녁노을이 펼쳐지고, 차향이 방 안을 가득 채우고 있다. 손에 쥔 노트에 오늘 있었던 일과 느낀 점을 적고 싶어진다. 한순간의 여유를 즐기며 이 날의 기억을 영원히 간직하자.</string>
+    <string name="preview">Preview</string>
     <string name="text_select">선택</string>
 </resources>

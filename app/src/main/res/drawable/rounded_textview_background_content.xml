@@ -17,7 +17,7 @@
         android:right="25dp"
         android:id="@+id/leftPart">
         <shape android:shape="rectangle">
-            <solid android:color="@color/y_gray" />
+            <solid android:color="?attr/memocolor" />
             <corners android:topLeftRadius="10dp"
                 android:topRightRadius="0dp"
                 android:bottomLeftRadius="10dp"

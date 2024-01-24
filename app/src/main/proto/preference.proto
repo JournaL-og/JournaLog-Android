@@ -1,0 +1,44 @@
+syntax = "proto3";
+option java_package = "com.jinin4.journalog";
+option java_multiple_files = true;
+message Preference {
+    enum DayOfWeek {
+        SUNDAY = 0;
+        MONDAY = 1;
+    }
+
+    enum SortOrder {
+        DESCENDING = 0;
+        ASCENDING = 1;
+    }
+
+    enum Language {
+        KOREAN = 0;
+        ENGLISH = 1;
+        JAPANESE = 2;
+        CHINESE = 3;
+    }
+
+    enum Theme {
+        LIGHT_THEME_1 = 0;
+        LIGHT_THEME_2 = 1;
+        LIGHT_THEME_3 = 2;
+        LIGHT_THEME_4 = 3;
+        DARK_THEME_1 = 4;
+        DARK_THEME_2 = 5;
+        DARK_THEME_3 = 6;
+        DARK_THEME_4 = 7;
+    }
+
+    DayOfWeek weekStartDay = 1;
+    SortOrder diarySortOrder = 2;
+    bool timeDisplay = 3;
+    bool calendarView = 4;
+    Language language = 5;
+    string appIcon = 6;
+    string fontType = 7;
+    int32 fontSize = 8;
+    Theme theme = 9;
+    string diaryBackgroundImagePath = 10;
+    string password = 11;
+}

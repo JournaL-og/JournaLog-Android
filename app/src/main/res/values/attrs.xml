@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="memocolor" format="reference" />
+    <attr name="calendercolor" format="reference"/>
+    <attr name="pickcolor" format="reference"/>
+    <attr name="modalbackground" format="reference"/>
+    <attr name="bottombackground" format="reference"/>
+    <attr name="navigationpick" format="reference"/>
+    <attr name="iconcolor" format="reference"/>
+</resources>

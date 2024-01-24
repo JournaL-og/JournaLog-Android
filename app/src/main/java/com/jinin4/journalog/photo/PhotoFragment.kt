@@ -5,25 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.databinding.FragmentPhotoBinding
-import com.jinin4.journalog.databinding.FragmentTestBinding
-import com.jinin4.journalog.db.memo.MemoDao
-import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
-import com.jinin4.journalog.firebase.storage.FirebaseFileManager
 import net.developia.todolist.db.JournaLogDatabase
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 //이상원 - 24.01.19
 //이지윤 수정 - 24.01.22
-class PhotoFragment : Fragment() {
+class PhotoFragment : BaseFragment() {
 
     private lateinit var binding: FragmentPhotoBinding
     private lateinit var adapter: PhotoRecyclerViewAdapter

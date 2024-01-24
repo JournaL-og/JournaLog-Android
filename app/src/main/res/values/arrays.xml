@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="day_of_week_entries">
+        <item>일요일</item>
+        <item>월요일</item>
+    </string-array>
+
+    <string-array name="day_of_week_values">
+        <item>SUNDAY</item>
+        <item>MONDAY</item>
+    </string-array>
+
+    <string-array name="sort_order_entries">
+        <item>내림차순</item>
+        <item>오름차순</item>
+    </string-array>
+
+    <string-array name="sort_order_values">
+        <item>DESCENDING</item>
+        <item>ASCENDING</item>
+    </string-array>
+
+    <string-array name="language_entries" />
+    <string-array name="language_values" />
+    <string-array name="app_icon_entries" />
+    <string-array name="app_icon_values" />
+    <string-array name="font_entries" >
+        <item>Noto Sans</item>
+        <item>Nanum Gothic</item>
+        <item>Nanum Myeongjo</item>
+    </string-array>
+    <string-array name="font_values">
+        <item>notosans</item>
+        <item>nanumgothic</item>
+        <item>nanummyeongjo</item>
+    </string-array>
+    <string-array name="theme_entries" >
+        <item>Moon grey</item>
+        <item>Sky blue</item>
+        <item>Baby peach</item>
+        <item>Pepper mint</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

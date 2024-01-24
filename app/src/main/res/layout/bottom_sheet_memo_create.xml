@@ -112,6 +112,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_pencil"
+        android:backgroundTint="?attr/pickcolor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:shapeAppearance="@style/ThemeOverlay.Material3.FloatingActionButton.Primary" />

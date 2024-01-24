@@ -15,6 +15,12 @@ import com.jinin4.journalog.calendar.CalendarMemoRecyclerViewAdapter
 import com.jinin4.journalog.databinding.FragmentTagBinding
 import com.jinin4.journalog.databinding.TagMemoBinding
 import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.utils.FontUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 //최성혁 - 24.01.22
 class TagMemoRecyclerViewAdapter(private val memoList : ArrayList<MemoEntity>) : RecyclerView.Adapter<TagMemoRecyclerViewAdapter.TagMemoViewHolder>(){
 
@@ -47,6 +53,16 @@ class TagMemoRecyclerViewAdapter(private val memoList : ArrayList<MemoEntity>) :
             6 -> R.color.navi_sw
             7 -> R.color.purple_sw
             else -> R.color.red_sw
+        }
+
+        val context = holder.itemView.context
+
+        GlobalScope.launch {
+            val typeface = FontUtils.getFontType(context)
+            val fontSize = FontUtils.getFontSize(context)
+            withContext(Dispatchers.Main) {
+                FontUtils.applyFont(holder.itemView, typeface,fontSize)
+            }
         }
         holder.cltag_.background =
             MemoRightColorSetting.changeRightColor(
