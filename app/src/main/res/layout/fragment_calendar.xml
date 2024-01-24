@@ -27,7 +27,7 @@
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/ic_calendar_today"
         android:layout_marginRight="5dp"
-        />
+        app:tint="?attr/iconcolor" />
 <!--    android:backgroundTint="#FDF6FE"-->
     <ImageButton
         android:id="@+id/btn_calendar"
@@ -37,6 +37,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/ic_calendar"
+        app:tint="?attr/iconcolor"
         />
 
 
@@ -49,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_selectedDate"
-        app:mcv_selectionColor="@color/y_gray"
+        app:mcv_selectionColor="?attr/pickcolor"
         app:mcv_showOtherDates="all|decorated_disabled"
         android:background="@drawable/rounded_calendar_background"
         app:mcv_calendarMode="week"
@@ -92,6 +93,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_pencil"
+        android:backgroundTint="?attr/pickcolor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:shapeAppearance="@style/ThemeOverlay.Material3.FloatingActionButton.Primary"

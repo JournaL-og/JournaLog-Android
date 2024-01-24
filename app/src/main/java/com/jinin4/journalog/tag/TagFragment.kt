@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.databinding.FragmentTagBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
@@ -16,13 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 //이상원 - 24.01.19
 //최성혁 - 수정 24.01.22
-class TagFragment : Fragment() {
+class TagFragment : BaseFragment() {
 
     lateinit var db: JournaLogDatabase
     private lateinit var binding: FragmentTagBinding

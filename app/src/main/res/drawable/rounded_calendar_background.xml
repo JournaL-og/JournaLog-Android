@@ -4,7 +4,7 @@
     <item>
         <shape android:shape="rectangle">
 
-            <solid android:color="@color/white" /><!-- 달력 배경 색 -->
+            <solid android:color="?attr/calendercolor" /><!-- 달력 배경 색 -->
             <corners android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"
                 android:bottomLeftRadius="17dp"

@@ -11,9 +11,14 @@ import com.jinin4.journalog.R
 import com.jinin4.journalog.databinding.ItemCalendarMemoBinding
 import com.jinin4.journalog.databinding.ItemCalendarMemoTextBinding
 import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.utils.FontUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-// 이상원 - 24.01.23
+// 이상원 - 24.01.23, 반정현 수정 - 24.01.24
 class CalendarMemoRecyclerViewAdapter(
     private val memoList: List<MemoEntity>,
     private val isOnlyText: Boolean
@@ -64,6 +69,17 @@ class CalendarMemoRecyclerViewAdapter(
             7 -> R.color.purple_sw
             else -> R.color.red_sw
         }
+
+        val context = holder.itemView.context
+
+        GlobalScope.launch {
+            val typeface = FontUtils.getFontType(context)
+            val fontSize = FontUtils.getFontSize(context)
+            withContext(Dispatchers.Main) {
+                FontUtils.applyFont(holder.itemView, typeface,fontSize)
+            }
+        }
+
 
         (holder as MemoViewHolder).content.background =
             MemoRightColorSetting.changeRightColor(

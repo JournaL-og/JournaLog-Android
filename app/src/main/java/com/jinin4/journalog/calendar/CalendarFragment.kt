@@ -1,15 +1,19 @@
 package com.jinin4.journalog.calendar
 
+
+
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jinin4.journalog.utils.BaseFragment
+import com.jinin4.journalog.Preference
 import com.jinin4.journalog.R
+import com.jinin4.journalog.dataStore
 import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
 import com.jinin4.journalog.databinding.FragmentCalendarBinding
 import com.jinin4.journalog.db.memo.MemoDao
@@ -21,11 +25,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
+import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-//이상원 - 24.01.19
-class CalendarFragment : Fragment(),MemoInsertCallback {
+//이상원 - 24.01.19, 반정현 - 24.01.22 수정
+class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
     private lateinit var binding: FragmentCalendarBinding
     private lateinit var adapter: CalendarMemoRecyclerViewAdapter
@@ -40,6 +45,22 @@ class CalendarFragment : Fragment(),MemoInsertCallback {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        //캘린더 보기 버튼 활성화 여부 확인, 한 주의 시작 일요일, 월요일 여부 확인
+        viewLifecycleOwner.lifecycleScope.launch {
+            context?.dataStore?.data?.collect { preferences ->
+                val calendarView = preferences.calendarView
+                binding.calendarView.visibility = if (!calendarView) View.VISIBLE else View.GONE
+                val weekStartDay = preferences.weekStartDay
+                val firstDayOfWeek = when (weekStartDay) {
+                    Preference.DayOfWeek.SUNDAY -> DayOfWeek.SUNDAY
+                    Preference.DayOfWeek.MONDAY -> DayOfWeek.MONDAY
+                    else -> DayOfWeek.SUNDAY
+                }
+                binding.calendarView.state().edit()
+                    .setFirstDayOfWeek(firstDayOfWeek)
+                    .commit()
+            }
+        }
 
         val calendarView: MaterialCalendarView = binding.calendarView
         calendarView.topbarVisible = false // topbar 삭제
@@ -153,10 +174,5 @@ class CalendarFragment : Fragment(),MemoInsertCallback {
     private fun convertDateList(dateList: List<String>): Set<CalendarDay> {
         return dateList.map { CalendarDay.from(LocalDate.parse(it)) }.toSet()
     }
-
-
-
-
-
 
 }

@@ -3,20 +3,45 @@ package com.jinin4.journalog.setting
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.jinin4.journalog.databinding.FragmentSettingBinding
-//이상원 - 24.01.19
-class SettingFragment : Fragment() {
+import androidx.lifecycle.lifecycleScope
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import com.jinin4.journalog.R
+import com.jinin4.journalog.utils.FontUtils
+import kotlinx.coroutines.launch
 
-    private lateinit var binding: FragmentSettingBinding
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+//이상원 - 24.01.19, 반정현 - 24.01.22 수정
 
-        binding = FragmentSettingBinding.inflate(inflater, container, false)
-        return binding.root
+class SettingFragment : PreferenceFragmentCompat() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preference, rootKey)
+
+        val displayPreference = findPreference<Preference>("display_category")
+        displayPreference?.setOnPreferenceClickListener {
+            val fragment = DisplayPreferenceFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view_tag, fragment)
+                .addToBackStack(null)
+                .commit()
+            true
+        }
+        val fontPreference = findPreference<Preference>("font_category")
+        fontPreference?.setOnPreferenceClickListener {
+            val fragment = FontPreferenceFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view_tag, fragment)
+                .addToBackStack(null)
+                .commit()
+            true
+        }
+        val themePreference = findPreference<Preference>("theme_category")
+        themePreference?.setOnPreferenceClickListener {
+            val fragment = ThemePreferenceFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view_tag, fragment)
+                .addToBackStack(null)
+                .commit()
+            true
+        }
     }
 }
