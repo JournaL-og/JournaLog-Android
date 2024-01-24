@@ -10,11 +10,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import com.bumptech.glide.request.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +29,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -41,6 +46,7 @@ import com.jinin4.journalog.db.photo.MemoPhotoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
 import com.jinin4.journalog.firebase.storage.FirebaseFileManager
+import com.jinin4.journalog.photo.PhotoDataHolder
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
 import java.io.File
@@ -115,6 +121,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         binding.btnCamera.setOnClickListener{
             openCamera()
         }
+
         binding.btnGallery.setOnClickListener{
             openGallery()
         }
@@ -202,6 +209,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
                         val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
                         val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
                         memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
+                        PhotoDataHolder.isDataChanged = true
                     }
                 }
                 requireActivity().runOnUiThread {
@@ -225,7 +233,9 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         val pathList = ArrayList<String>()
         for ((i, uri) in uriList.withIndex()) {
             val path = "${androidID}/${System.currentTimeMillis()}_${i+1}.jpg"
-            pathList.add(path)
+            val thumbnailPath = "${androidID}/thumbnail/${System.currentTimeMillis()}_${i+1}.jpg"
+//            pathList.add(path)
+            pathList.add(thumbnailPath)
             FirebaseFileManager.uploadImage(
                 uri,
                 path,
@@ -236,11 +246,54 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
                 }
             )
+
+            // 이지윤: 섬네일 파일 업로드 추가 - 24.01.24
+            resizeImage(binding.root.context, uri, 150, 150,
+                onSuccess = { bitmap ->
+                    // 조정된 이미지 업로드
+                    FirebaseFileManager.uploadImage(
+                        bitmap,
+                        thumbnailPath,
+                        onSuccess = {
+
+                        },
+                        onFailure = { exception ->
+                            // 업로드 실패 시
+                            // TODO: 업로드 실패에 따른 추가 작업 수행
+//                    showToast("이미지 업로드 실패: ${exception.message}")
+                        }
+                    )
+                },
+                onFailure = { exception ->
+                    // 오류 처리
+                }
+            )
+
         }
         return pathList
 
     }
 
+    // 이지윤: 섬네일 파일 업로드 추가 - 24.01.24
+    private fun resizeImage(context: Context, uri: Uri, width: Int, height: Int, onSuccess: (Bitmap) -> Unit, onFailure: (Exception) -> Unit) {
+        Glide.with(context)
+            .asBitmap() // Bitmap으로 로드
+            .load(uri) // Uri로부터 이미지 로드
+            .apply(RequestOptions().override(width, height)) // 이미지 크기 조정
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    onSuccess(resource) // 조정된 이미지를 콜백으로 반환
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    onFailure(Exception("이미지 로드 실패"))
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // 필요한 경우 여기에 정리 코드 작성
+                }
+            })
+    }
 
     /****************************************************************************************************
      * 여기부터 bottom sheet 카메라, 이미지 처리 부분
