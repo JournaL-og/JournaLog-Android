@@ -21,8 +21,11 @@ interface MemoPhotoDao {
 
     @Delete
     fun deletePhoto(memoPhoto: MemoPhotoEntity)
-    @Query("delete from Memo_Photo where memo_id = :id")
-    fun deleteMemoPhotoById(id: Int)
+    @Query("delete from Memo_Photo where memo_id = :memo_id")
+    fun deleteMemoPhotoByMemoId(memo_id: Int)
+
+    @Query("delete from Memo_Photo where memo_id = :memo_id and photo_id = :photo_id")
+    fun deleteMemoPhotoByMemoIdAndPhotoId(memo_id: Int, photo_id:Int)
     @Update
     fun updatePhoto(memoPhoto: MemoPhotoEntity)
 }
