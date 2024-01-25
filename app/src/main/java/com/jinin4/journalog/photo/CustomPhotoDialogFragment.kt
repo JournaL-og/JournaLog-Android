@@ -1,0 +1,121 @@
+package com.jinin4.journalog.photo
+
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
+import com.jinin4.journalog.R
+import kotlin.math.abs
+
+class CustomPhotoDialogFragment(private val imageUrl: String) : DialogFragment() {
+
+    private var touchStartY = 0f
+    private var touchCurrentY = 0f
+    private val minDragDistance = 350f // 최소 드래그 거리 (픽셀 단위)
+    private val maxDragDistance = 700f // 최대 드래그 거리 (픽셀 단위)
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_photo_dialog, container, false)
+
+        val statusBarHeight = getStatusBarHeight()
+        val navigationBarHeight = getNavigationBarHeight()
+
+        // FrameLayout 찾기 및 상단 패딩 설정
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraintLayout)
+        constraintLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight)
+
+        Log.d("Firebase dialog url", imageUrl)
+        // 이미지 뷰 설정
+        val imageView = view.findViewById<ImageView>(R.id.ivCustomImage)
+        Glide.with(this).load(imageUrl).into(imageView)
+
+        val closeButton = view.findViewById<ImageButton>(R.id.btnClose)
+        closeButton.setOnClickListener { dismiss() }
+
+        // 날짜 텍스트 설정
+        val dateTextView = view.findViewById<TextView>(R.id.tvDate)
+        dateTextView.text = "2024년 1월 25일 (목) 오전 11:32"
+
+        // 추가 텍스트 설정
+        val additionalTextView = view.findViewById<TextView>(R.id.tvAdditionalText)
+        additionalTextView.text = "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ"
+
+        imageView.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    touchStartY = event.rawY
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    touchCurrentY = event.rawY
+                    val deltaY = touchCurrentY - touchStartY
+                    val translationY = v.translationY + deltaY
+                    v.translationY = translationY.coerceIn(-maxDragDistance, maxDragDistance)
+                    touchStartY = touchCurrentY
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (abs(v.translationY) > minDragDistance) {
+                        dismiss() // 드래그 거리가 임계값을 초과하면 다이얼로그 닫기
+                    } else {
+                        resetDialogPosition(imageView) // 이미지 뷰를 원래 위치로 되돌림
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+
+        return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BlackBackgroundDialog)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.also { window ->
+            // 다이얼로그가 전체 화면을 차지하도록 설정
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+            // 화면 경계 제한 없이 드래그가 가능하도록 설정
+            val params = window.attributes
+            params.flags = params.flags or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            window.attributes = params
+        }
+    }
+
+    private fun resetDialogPosition(imageView: ImageView) {
+        imageView.translationY = 0f // 이미지 뷰를 원래 위치로 되돌림
+    }
+
+    private fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+    }
+
+    private fun getNavigationBarHeight(): Int {
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+    }
+
+}

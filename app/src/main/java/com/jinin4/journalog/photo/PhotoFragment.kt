@@ -1,5 +1,6 @@
 package com.jinin4.journalog.photo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.jinin4.journalog.databinding.FragmentPhotoBinding
 import com.jinin4.journalog.db.photo.PhotoDao
@@ -49,13 +51,14 @@ class PhotoFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("HardwareIds")
     private fun getAllPhotoList() {
 
         if (PhotoDataHolder.uriList == null || PhotoDataHolder.isDataChanged) {
-            val androidID: String = Settings.Secure.getString(
+            val androidID: String = (Settings.Secure.getString(
                 context?.contentResolver,
                 Settings.Secure.ANDROID_ID
-            )+"/thumbnail" ?: "default"
+            ) + "/thumbnail") ?: "default"
 
             FirebaseFileManager.loadImageFromFirebase(androidID) { uri ->
                 PhotoDataHolder.uriList = uri
@@ -71,7 +74,7 @@ class PhotoFragment : Fragment() {
 
     private fun setRecyclerView() {
         requireActivity().runOnUiThread {
-            adapter = PhotoRecyclerViewAdapter(binding.root.context, uriList) // ❷ 어댑터 객체 할당
+            adapter = PhotoRecyclerViewAdapter(binding.root.context, uriList, parentFragmentManager) // ❷ 어댑터 객체 할당
             binding.imageRecyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.imageRecyclerView.layoutManager = GridLayoutManager(binding.root.context,3) // 레이아웃 매니저 설정
         }

@@ -325,8 +325,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         for ((i, uri) in uriList.withIndex()) {
             val path = "${androidID}/${System.currentTimeMillis()}_${i+1}.jpg"
             val thumbnailPath = "${androidID}/thumbnail/${System.currentTimeMillis()}_${i+1}.jpg"
-//            pathList.add(path)
-            pathList.add(thumbnailPath)
+            pathList.add(path)
             FirebaseFileManager.uploadImage(
                 uri,
                 path,
