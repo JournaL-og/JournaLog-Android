@@ -22,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/toolbar"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.8" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -40,23 +40,5 @@
         app:labelVisibilityMode="unlabeled"
         app:itemBackground="?attr/bottombackground"
         />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_gravity="top"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        tools:ignore="MissingConstraints" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

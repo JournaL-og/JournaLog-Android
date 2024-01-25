@@ -2,11 +2,13 @@ package com.jinin4.journalog.utils
 
 import android.content.Context
 import android.graphics.Typeface
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.jinin4.journalog.R
 import com.jinin4.journalog.dataStore
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.coroutines.flow.first
 //반정현 작성 - 24.01.24
 object FontUtils {
@@ -14,18 +16,19 @@ object FontUtils {
         val fontType = context.dataStore.data.first().fontType ?: "notosans"
 
         return when (fontType) {
-            "notosans" -> context.resources.getFont(R.font.notosans)
+            "nanumsquare" -> context.resources.getFont(R.font.nanumsquare)
             "nanumgothic" -> context.resources.getFont(R.font.nanumgothic)
             "nanummyeongjo" -> context.resources.getFont(R.font.nanummyeongjo)
-            else -> context.resources.getFont(R.font.notosans)
+            "nanumpen"-> context.resources.getFont(R.font.nanumpen)
+            "nanumbarungothic"->context.resources.getFont(R.font.nanumbarungothic)
+            else -> context.resources.getFont(R.font.nanumsquare)
         }
     }
     suspend fun getFontSize(context: Context): Float {
         val fontSize = context.dataStore.data.first().fontSize ?: 16
         return when {
-            fontSize <= 12 -> 12.toFloat()
-            fontSize >= 30 -> 30.toFloat()
-            else -> fontSize.toFloat()
+            fontSize <= 40 -> 10.toFloat()
+            else -> fontSize/4.toFloat()
         }
     }
 
@@ -40,6 +43,7 @@ object FontUtils {
                 view.typeface = typeface
                 view.textSize = fontSize
             }
+
         }
     }
 }
