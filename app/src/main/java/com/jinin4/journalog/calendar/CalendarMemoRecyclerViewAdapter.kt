@@ -44,7 +44,7 @@ class CalendarMemoRecyclerViewAdapter(
     inner class MemoViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val timestamp = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvTimestamp else (binding as ItemCalendarMemoBinding).tvTimestamp
         val content = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvContent else (binding as ItemCalendarMemoBinding).tvContent
-        val imageGrid = if (isOnlyText) null else (binding as ItemCalendarMemoBinding).gridView
+        //val imageGrid = if (isOnlyText) null else (binding as ItemCalendarMemoBinding).gridView
         val root = binding.root
     }
 

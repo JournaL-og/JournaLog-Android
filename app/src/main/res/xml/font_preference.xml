@@ -12,13 +12,12 @@
         app:key="fontType"
         app:entries="@array/font_entries"
         app:entryValues="@array/font_values"
-        app:defaultValue="notosans"
+        app:defaultValue="nanumsquare"
         />
     <SeekBarPreference
         app:title="크기"
         app:key="fontSize"
-        app:defaultValue="12"
-        app:min="10"
+        app:defaultValue="72"
      />
 
 

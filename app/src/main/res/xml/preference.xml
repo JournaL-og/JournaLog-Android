@@ -10,7 +10,7 @@
         app:key="Custom_category"
         app:title="Custom">
         <Preference
-            app:icon="@drawable/baseline_notes_24"
+            app:icon="@drawable/ic_display_setting"
             app:key="display_category"
             app:title="디스플레이 조정"
             />

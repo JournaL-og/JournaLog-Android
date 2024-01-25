@@ -1,7 +1,6 @@
 package com.jinin4.journalog.setting
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

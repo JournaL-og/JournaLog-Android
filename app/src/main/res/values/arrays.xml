@@ -25,14 +25,18 @@
     <string-array name="app_icon_entries" />
     <string-array name="app_icon_values" />
     <string-array name="font_entries" >
-        <item>Noto Sans</item>
+        <item>Nanum Square</item>
         <item>Nanum Gothic</item>
         <item>Nanum Myeongjo</item>
+        <item>Nanum Pen</item>
+        <item>Nanum BarunGothic</item>
     </string-array>
     <string-array name="font_values">
-        <item>notosans</item>
+        <item>nanumsquare</item>
         <item>nanumgothic</item>
         <item>nanummyeongjo</item>
+        <item>nanumpen</item>
+        <item>nanumbarungothic</item>
     </string-array>
     <string-array name="theme_entries" >
         <item>Moon grey</item>

@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private var isWeek = true
     override fun onCreate(savedInstanceState: Bundle?) {
         //앱 시작할 때 테마 적용
-        applyTheme()
+        //applyTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val navView = binding.bottomNavigation
@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             when (theme) {
                 Preference.Theme.LIGHT_THEME_1 -> setTheme(R.style.LIGHT_THEME_1)
                 Preference.Theme.LIGHT_THEME_2 -> setTheme(R.style.LIGHT_THEME_2)
+                Preference.Theme.LIGHT_THEME_3 -> setTheme(R.style.LIGHT_THEME_3)
                 else->setTheme(R.style.LIGHT_THEME_1)
             }
             val typedValue = TypedValue()
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             contextTheme.resolveAttribute(R.attr.pickcolor, typedValue, true)
             val pickColorResId = typedValue.resourceId
             val pickColorStateList = ContextCompat.getColorStateList(this, pickColorResId)
+            // 바텀네비게이션 클릭했을 때 배경색상 변경
             navView.itemActiveIndicatorColor = pickColorStateList
         }
 
@@ -54,14 +56,15 @@ class MainActivity : AppCompatActivity() {
         // 바텀네비게이션 클릭했을 때 배경색상 변경
         //navView.itemActiveIndicatorColor = ContextCompat.getColorStateList(this, R.color.moon)
         navView.selectedItemId = R.id.itm_calendar_home
-        supportFragmentManager.beginTransaction()
-            .add(androidx.fragment.R.id.fragment_container_view_tag , CalendarFragment()).commit()
-
-        // 툴바 설정
-        toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        // 비동기 작업을 시작합니다.
+        applyTheme {
+            // 초기화가 완료되었을 때 콜백 내에서 프래그먼트를 추가
+            if (savedInstanceState == null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view_tag, CalendarFragment())
+                    .commit()
+            }
+        }
 
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -101,27 +104,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun applyTheme() {
+    private fun applyTheme(onThemeApplied: () -> Unit) {
         lifecycleScope.launch {
             val theme = dataStore.data.first().theme
-            Log.d("Theme","${theme}")
             when (theme) {
                 Preference.Theme.LIGHT_THEME_1 -> setTheme(R.style.LIGHT_THEME_1)
                 Preference.Theme.LIGHT_THEME_2 -> setTheme(R.style.LIGHT_THEME_2)
+                Preference.Theme.LIGHT_THEME_3 -> setTheme(R.style.LIGHT_THEME_3)
                 else->setTheme(R.style.LIGHT_THEME_1)
             }
+            onThemeApplied()
         }
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                supportFragmentManager.popBackStack()  // 프래그먼트 스택에서 마지막 프래그먼트를 제거
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
 
 }

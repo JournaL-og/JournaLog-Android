@@ -129,6 +129,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_pencil"
+        android:tint="?attr/iconcolor"
         android:backgroundTint="?attr/pickcolor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
