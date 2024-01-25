@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.GridLayout
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -32,6 +33,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -328,14 +330,6 @@ class MemoCreateBottomSheet(
     }
 
     override fun onMemoImageUpdated(position: Int) {
-//        Thread{
-//            val photoId = photoDao.getPhotoIdByMemoIdAndUri(memoEntity?.memo_id!!, uriList[position].toString())
-//            photoDao.deletePhotoByMemoIdAndUri(memoEntity.memo_id!!, uriList[position].toString())
-//            memoPhotoDao.deleteMemoPhotoByMemoIdAndPhotoId(memoEntity.memo_id!!, photoId!!)
-//
-//
-//
-//        }.start()
         uriList.removeAt(position)
         updateAdapter()
     }
@@ -499,7 +493,6 @@ class MemoCreateBottomSheet(
 
     /**
      * 카메라에서 찍은 사진을 처리하는 로직
-
      */
     private fun handleCameraImage(result: ActivityResult) {
         val data: Intent? = result.data
@@ -537,6 +530,7 @@ class MemoCreateBottomSheet(
         val recyclerView = binding.rvImageSlide
         imageAdapter = MultiImageAdapter(uriList, binding.root.context, this)
         recyclerView.adapter = imageAdapter
+//        recyclerView.layoutManager = GridLayoutManager(binding.root.context)
         recyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
     }
 

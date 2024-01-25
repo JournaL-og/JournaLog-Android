@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
-// 이지윤 작성 - 24.01.22
+// 이지윤 작성 - 24.01.22, // 이상원 24-01-25 추가
 @Dao
 interface PhotoDao {
 

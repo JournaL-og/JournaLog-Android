@@ -27,7 +27,7 @@ interface MemoDao {
 //    @Query("select memo_id,content,date(timestamp),color_id from memo where timestamp = :timestamp")
 //    fun getMemoByTimestamp(timestamp: String): List<MemoEntity>
 
-    @Query("SELECT memo_id, content, strftime('%H:%M', timestamp) as timestamp, color_id FROM memo WHERE date(timestamp) = :timestamp")
+    @Query("SELECT memo_id, content, strftime('%H:%M', timestamp) as timestamp, color_id FROM memo WHERE date(timestamp) = :timestamp order by timestamp")
     fun getMemoByTimestamp(timestamp: String): List<MemoEntity>
 
     @Query("SELECT DISTINCT date(timestamp) AS timestamp FROM memo")

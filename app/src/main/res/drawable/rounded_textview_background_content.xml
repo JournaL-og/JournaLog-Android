@@ -14,7 +14,7 @@
     </item>
     <!-- 왼쪽 부분: 기본 배경 색상 -->
     <item
-        android:right="25dp"
+        android:right="9dp"
         android:id="@+id/leftPart">
         <shape android:shape="rectangle">
             <solid android:color="?attr/memocolor" />

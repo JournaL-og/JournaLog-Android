@@ -6,15 +6,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="?attr/calendercolor"
+        tools:layout_editor_absoluteX="0dp" />
+
     <TextView
         android:id="@+id/tv_selectedDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date"
         android:textSize="20sp"
-        android:layout_margin="15dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@+id/tl_tab"
+        app:layout_constraintStart_toStartOf="@+id/tl_tab"
+        app:layout_constraintBottom_toBottomOf="@+id/tl_tab"
         />
 
 
@@ -22,8 +34,9 @@
         android:id="@+id/btn_today"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tl_tab"
+        app:layout_constraintTop_toTopOf="@+id/tl_tab"
+        app:layout_constraintBottom_toBottomOf="@+id/tl_tab"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/ic_calendar_today"
         android:layout_marginRight="5dp"
@@ -34,27 +47,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/btn_today"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tl_tab"
+        app:layout_constraintBottom_toBottomOf="@+id/tl_tab"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/ic_calendar"
         app:tint="?attr/iconcolor"
         />
-
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendarView"
+    <LinearLayout
+        android:id="@+id/ll_calendarLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tl_tab"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_today"
-        app:mcv_selectionColor="?attr/pickcolor"
-        app:mcv_showOtherDates="all|decorated_disabled"
-        android:background="@drawable/rounded_calendar_background"
-        app:mcv_calendarMode="week"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintHeight_max="310dp"
+        android:orientation="vertical">
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mcv_selectionColor="?attr/pickcolor"
+            app:mcv_showOtherDates="decorated_disabled"
+            android:background="@drawable/rounded_calendar_background"
+            app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+            app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+            app:mcv_calendarMode="week" />
+    </LinearLayout>
+
+
+<!--    <com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
+<!--        android:id="@+id/calendarView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tl_tab"-->
+<!--        app:mcv_selectionColor="?attr/pickcolor"-->
+<!--        app:mcv_showOtherDates="decorated_disabled"-->
+<!--        android:background="@drawable/rounded_calendar_background"-->
+<!--        app:mcv_calendarMode="week"-->
+
+<!--        />-->
+<!--&lt;!&ndash;    app:layout_constraintHeight_max="250dp"&ndash;&gt;-->
 <!--    app:layout_constraintHeight_max="300dp"-->
     <!--   mcv_selectionColor - 선택 시 배경색 -->
     <!--        app:mcv_tileHeight="48dp"-->
@@ -66,10 +102,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView"
+        app:layout_constraintTop_toBottomOf="@+id/ll_calendarLayout"
         app:layout_constraintVertical_bias="1.0"
-        tools:listitem="@layout/item_calendar_memo" />
-
+         />
+<!--    tools:listitem="@layout/item_calendar_memo_text"-->
 <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--        android:id="@+id/fab_add_memo"-->
 <!--        android:layout_width="wrap_content"-->
