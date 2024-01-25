@@ -2,25 +2,25 @@ package com.jinin4.journalog.calendar
 
 
 
-import android.content.DialogInterface
+
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.Preference
 import com.jinin4.journalog.R
-import com.jinin4.journalog.RecyclerViewItemClickListener
 import com.jinin4.journalog.dataStore
 import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
 import com.jinin4.journalog.databinding.FragmentCalendarBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.utils.CustomFontCalendarDecorator
+import com.jinin4.journalog.utils.FontUtils
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -34,15 +34,16 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Calendar
 
 //이상원 - 24.01.19, 반정현 - 24.01.22 수정
-class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
+class CalendarFragment : BaseFragment(),MemoInsertCallback {
+    //private val viewModel: ThemeViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
     private lateinit var adapter: CalendarMemoRecyclerViewAdapter
     private lateinit var memoList: List<MemoEntity>
     lateinit var db: JournaLogDatabase
     lateinit var memoDao: MemoDao
-
     private var isWeek = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,6 +68,13 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         }
 
         val calendarView: MaterialCalendarView = binding.calendarView
+        viewLifecycleOwner.lifecycleScope.launch {
+            val typeface = FontUtils.getFontType(requireContext())
+            val fontSize = FontUtils.getFontSize(requireContext())
+            calendarView.addDecorator(CustomFontCalendarDecorator(typeface, fontSize*2))
+        }
+
+
         calendarView.topbarVisible = false // topbar 삭제
 
 //        calendarView.setBackgroundColor(resources.getColor(R.color.note))
@@ -183,5 +191,6 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     private fun convertDateList(dateList: List<String>): Set<CalendarDay> {
         return dateList.map { CalendarDay.from(LocalDate.parse(it)) }.toSet()
     }
+
 
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
@@ -17,14 +18,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jinin4.journalog.R
 import com.jinin4.journalog.dataStore
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 // 반정현 - 24.01.22
 class FontPreferenceFragment : PreferenceFragmentCompat() {
+    private lateinit var fontTypePreference: ListPreference
+    private lateinit var fontSizePreference: SeekBarPreference
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.font_preference, rootKey)
+//        val fontSizePreference = SeekBarPreference(requireContext()).apply {
+//            title="크기"
+//            key="fontSize"
+//            max = 10
+//            setDefaultValue(5)
+//        }
 
         //fonttype 설정
-        val fontTypePreference = findPreference<ListPreference>("fontType")
+        fontTypePreference = findPreference<ListPreference>("fontType")!!
         fontTypePreference?.summary = fontTypePreference?.entry
         fontTypePreference?.setOnPreferenceChangeListener { preference, newValue ->
             val selectedFont = newValue.toString()
@@ -34,20 +44,13 @@ class FontPreferenceFragment : PreferenceFragmentCompat() {
                     preferences.toBuilder().setFontType(selectedFont).build()
                 }
             }
-            val index = fontTypePreference?.findIndexOfValue(newValue.toString())
-            preference.summary = fontTypePreference?.entries?.get(index ?: 0)
-            // 값이 변경될 때마다 FontPreviewFragment를 다시 불러옵니다.
-            val newFragment = FontPreviewFragment()
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.container_preview, newFragment)
-                ?.commit()
             true
         }
 
         // fontSize 설정
-        val fontSizePreference = findPreference<SeekBarPreference>("fontSize")
+        fontSizePreference = findPreference<SeekBarPreference>("fontSize")!!
         fontSizePreference?.setOnPreferenceChangeListener { preference, newValue ->
-            val selectedFontSize = (newValue as Int) / 4
+            val selectedFontSize = (newValue as Int)
 
             lifecycleScope.launch {
                 context?.dataStore?.updateData { preferences ->
@@ -81,6 +84,21 @@ class FontPreferenceFragment : PreferenceFragmentCompat() {
         // Preview container를 보이게 합니다.
         activity?.findViewById<FrameLayout>(R.id.container_preview)?.visibility = View.VISIBLE
 
+        val fontSettingsFlow = context?.dataStore?.data?.map { preferences ->
+            Pair(preferences.fontType, preferences.fontSize)
+        }
+
+        // DataStore의 fontType,fontSize 변경을 감지(observe 메서드)하고 이를 반영하여 UI를 업데이트
+        fontSettingsFlow?.asLiveData()?.observe(viewLifecycleOwner) { (fontType, fontSize)  ->
+            val newFragment = FontPreviewFragment()
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.container_preview, newFragment)
+                ?.commit()
+            val index = fontTypePreference?.findIndexOfValue(fontType)
+            fontTypePreference?.summary = fontTypePreference?.entries?.get(index.takeIf { it != -1 } ?: 0)
+        }
+
+
         // RecyclerView에 위쪽 패딩 추가
         val recyclerView = listView
 
@@ -92,25 +110,10 @@ class FontPreferenceFragment : PreferenceFragmentCompat() {
         val halfScreenHeight = screenHeight / 2
         recyclerView.setPadding(0, halfScreenHeight, 0, 0)
         recyclerView.clipToPadding = false
-        viewLifecycleOwner.lifecycleScope.launch {
-            val typeface = getFontType(requireContext())
-            applyFont(view, typeface)
-        }
 
 
     }
 
-    //액션바 뒤로가기 버튼 활성화
-    override fun onResume() {
-        super.onResume()
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    //액션바 뒤로가기 버튼 비활성화
-    override fun onPause() {
-        super.onPause()
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -133,29 +136,6 @@ class FontPreferenceFragment : PreferenceFragmentCompat() {
             bottomNavigation?.visibility = View.GONE
         } else {
             bottomNavigation?.visibility = View.VISIBLE
-        }
-    }
-
-    private suspend fun getFontType(context: Context): Typeface? {
-        val fontType = context.dataStore.data.first().fontType ?: "notosans"
-        return when (fontType) {
-            "notosans" -> resources.getFont(R.font.notosans)
-            "nanumgothic" -> resources.getFont(R.font.nanumgothic)
-            "nanummyeongjo" -> resources.getFont(R.font.nanummyeongjo)
-            else -> resources.getFont(R.font.notosans)
-        }
-    }
-
-    private fun applyFont(view: View, typeface: Typeface?) {
-        when (view) {
-            is ViewGroup -> {
-                for (i in 0 until view.childCount) {
-                    applyFont(view.getChildAt(i), typeface)
-                }
-            }
-            is TextView -> {
-                view.typeface = typeface
-            }
         }
     }
 

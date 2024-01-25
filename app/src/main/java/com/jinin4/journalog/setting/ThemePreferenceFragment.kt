@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,10 @@ class ThemePreferenceFragment : PreferenceFragmentCompat() {
                 val selectedTheme = Preference.Theme.forNumber(newValue.toString().toInt())
                 lifecycleScope.launch {
                     viewModel.changeTheme(selectedTheme)
+                    val newFragment=ThemePreviewFragment()
+                    activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.container_preview, newFragment)
+                        ?.commit()
                 }
                 true
             }
@@ -40,27 +45,39 @@ class ThemePreferenceFragment : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 처음 화면이 생성될 때 ThemePreviewFragment를 불러옵니다.
+        val newFragment = ThemePreviewFragment()
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.container_preview, newFragment)
+            ?.commit()
+
+        // Preview container를 보이게 합니다.
+        activity?.findViewById<FrameLayout>(R.id.container_preview)?.visibility = View.VISIBLE
+
         // RecyclerView에 위쪽 패딩 추가
         val recyclerView = listView
-        val padding = resources.getDimensionPixelSize(R.dimen.toolbar_height)
-        recyclerView.setPadding(0, padding, 0, 0)
+
+        // 화면의 높이를 가져옵니다.
+        val metrics = resources.displayMetrics
+        val screenHeight = metrics.heightPixels
+
+        // 화면 높이의 80%를 계산합니다.
+        val halfScreenHeight = (screenHeight * 0.8).toInt()
+        recyclerView.setPadding(0, halfScreenHeight, 0, 0)
         recyclerView.clipToPadding = false
     }
 
-    //액션바 뒤로가기 버튼 활성화
-    override fun onResume() {
-        super.onResume()
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    //액션바 뒤로가기 버튼 비활성화
-    override fun onPause() {
-        super.onPause()
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        val previewFragment = parentFragmentManager.findFragmentById(R.id.container_preview)
+        if (previewFragment != null) {
+            parentFragmentManager.beginTransaction()
+                .remove(previewFragment)
+                .commit()
+        }
+        // Preview container를 숨깁니다.
+        activity?.findViewById<FrameLayout>(R.id.container_preview)?.visibility = View.GONE
         hideBottomNavigation(false)
     }
 

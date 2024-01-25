@@ -70,17 +70,6 @@ class DisplayPreferenceFragment : PreferenceFragmentCompat() {
         recyclerView.clipToPadding = false
     }
 
-    //액션바 뒤로가기 버튼 활성화
-    override fun onResume() {
-        super.onResume()
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    //액션바 뒤로가기 버튼 비활성화
-    override fun onPause() {
-        super.onPause()
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

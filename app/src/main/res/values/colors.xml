@@ -26,8 +26,12 @@
     <color name="purple_sw">#B39DDB</color>
     <color name="sky_pale">#B9EEFE</color>
 
-    <color name="grey">#EBEBEB</color>
+    <color name="grey">#EAEAEA</color>
     <color name="moon">#F7DAA2</color>
     <color name="sky">#98C7CD</color>
+    <color name="baby">#FBF6F2</color>
+    <color name="lightpink">#F9EDE1</color>
+    <color name="pink">#F7B579</color>
+
 
 </resources>

@@ -17,6 +17,7 @@ import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
 import com.jinin4.journalog.firebase.storage.FirebaseFileManager
+import com.jinin4.journalog.utils.BaseFragment
 import kotlinx.coroutines.*
 import net.developia.todolist.db.JournaLogDatabase
 
@@ -24,7 +25,7 @@ import net.developia.todolist.db.JournaLogDatabase
 //이지윤 수정 - 24.01.22
 
 
-class PhotoFragment : Fragment() {
+class PhotoFragment : BaseFragment() {
 
     private lateinit var binding: FragmentPhotoBinding
     private lateinit var adapter: PhotoRecyclerViewAdapter
