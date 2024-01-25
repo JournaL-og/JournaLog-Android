@@ -63,7 +63,10 @@ import java.util.Calendar
 
 
 // 이상원 - 24.01.22
-class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoInsertCallback, val memoEntity:MemoEntity?) : BottomSheetDialogFragment()  {
+class MemoCreateBottomSheet(
+    val selectedDate: CalendarDay,
+    val callback: MemoInsertCallback,
+    val memoEntity:MemoEntity?) : BottomSheetDialogFragment(), ImageUpdatedCallback {
 
     private lateinit var binding: BottomSheetMemoCreateBinding
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -172,37 +175,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         return binding.root
     }
 
-    private fun deleteMemo(memoEntity: MemoEntity) {
-        val rootContext = binding.root.context
-        val builder: AlertDialog.Builder = AlertDialog.Builder(rootContext)
-        builder.setTitle("메모 삭제")
-        builder.setMessage("메모를 삭제하시겠습니까?")
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("네",
-            object : DialogInterface.OnClickListener {
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                    if (memoEntity != null) {
-                        Thread {
-                            memoDao.deleteMemo(memoEntity)
-                            photoDao.deletePhotoByMemoId(memoEntity.memo_id!!)
-                            memoPhotoDao.deleteMemoPhotoById(memoEntity.memo_id!!)
-                            requireActivity().runOnUiThread {
-                                callback.onMemoInserted()
-                                dismiss()
-                            }
-                        }.start()
-                    }
-                }
-            }
-        )
-        val alertDialog = builder.create()
-        alertDialog.setOnShowListener {
-            val textColor = ContextCompat.getColor(requireActivity(), getColorById(insertedColorId))
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(textColor)
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(textColor)
-        }
-        alertDialog.show()
-    }
+
 
 
     private fun filterMemosByColorId(colorId:Int) {
@@ -277,10 +250,41 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
             }.start()
         }
     }
+    private fun deleteMemo(memoEntity: MemoEntity) {
+        val rootContext = binding.root.context
+        val builder: AlertDialog.Builder = AlertDialog.Builder(rootContext)
+        builder.setTitle("메모 삭제")
+        builder.setMessage("메모를 삭제하시겠습니까?")
+        builder.setNegativeButton("취소", null)
+        builder.setPositiveButton("네",
+            object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    if (memoEntity != null) {
+                        Thread {
+                            memoDao.deleteMemo(memoEntity)
+                            photoDao.deletePhotoByMemoId(memoEntity.memo_id!!)
+                            memoPhotoDao.deleteMemoPhotoByMemoId(memoEntity.memo_id!!)
+                            requireActivity().runOnUiThread {
+                                callback.onMemoInserted()
+                                dismiss()
+                            }
+                        }.start()
+                    }
+                }
+            }
+        )
+        val alertDialog = builder.create()
+        alertDialog.setOnShowListener {
+            val textColor = ContextCompat.getColor(requireActivity(), getColorById(insertedColorId))
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(textColor)
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(textColor)
+        }
+        alertDialog.show()
+    }
 
     private fun updateMemo() {
         val edtCon = binding.edtContent.text.toString()
-        if (edtCon.isBlank()) {
+        if (edtCon.isBlank() && uriList.isEmpty()) {
             requireActivity().runOnUiThread{
                 showToast("메모나 사진을 추가해주세요.")
             }
@@ -293,22 +297,47 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
         Thread{
             memoDao.updateMemo(updatedMemoEntity)
-//            if (uriList.isNotEmpty()) {
-//                val pathList = uploadImageToFireBase(uriList)
-//                for ((i, path) in pathList.withIndex()) {
-//                    val photoEntity = PhotoEntity(null,insertedMemoId,path)
-//                    val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
-//                    val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
-//                    memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
-//                }
-//            }
+            if (uriList.isNotEmpty()) {
+                // 원래 3장이었는데 1~2장 된 경우 -> photo에서 삭제만 해주면 됨(근데 다 삭제 후 새로운 거 일수도 있음)
+
+                // 원래 3장이었는데 4장 이상이 된 경우 -> 인서트 해줘야댐(이것도 다삭제하고 새로운 4개일 수도,,)
+
+                // 원래 3장이었는데 그대로 3장인 경우 -> uri가 기존과 같은지 비교 후 다르면 삭제, 인서트 다해줘
+
+                // 근데 위의 3 경우를 모두 고려하기 귀찮으니까 그냥 모두 삭제 후 urilist에 있는거로 새로 인서트해줘
+                photoDao.deletePhotoByMemoId(memoEntity.memo_id!!)
+                memoPhotoDao.deleteMemoPhotoByMemoId(memoEntity.memo_id!!)
+                val pathList = uploadImageToFireBase(uriList)
+                for ((i, path) in pathList.withIndex()) {
+                    val photoEntity =
+                        PhotoEntity(null, memoEntity.memo_id!!, path, uriList[i].toString())
+                    val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
+                    val memoPhotoEntity =
+                        MemoPhotoEntity(null, memoEntity.memo_id!!, insertedPhotoId)
+                    memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
+                }
+            } else {
+                photoDao.deletePhotoByMemoId(memoEntity.memo_id!!)
+                memoPhotoDao.deleteMemoPhotoByMemoId(memoEntity.memo_id!!)
+            }
             requireActivity().runOnUiThread {
                 callback.onMemoInserted()
                 dismiss()
             }
         }.start()
+    }
 
-
+    override fun onMemoImageUpdated(position: Int) {
+//        Thread{
+//            val photoId = photoDao.getPhotoIdByMemoIdAndUri(memoEntity?.memo_id!!, uriList[position].toString())
+//            photoDao.deletePhotoByMemoIdAndUri(memoEntity.memo_id!!, uriList[position].toString())
+//            memoPhotoDao.deleteMemoPhotoByMemoIdAndPhotoId(memoEntity.memo_id!!, photoId!!)
+//
+//
+//
+//        }.start()
+        uriList.removeAt(position)
+        updateAdapter()
     }
 
 
@@ -324,9 +353,9 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         val pathList = ArrayList<String>()
         for ((i, uri) in uriList.withIndex()) {
             val path = "${androidID}/${System.currentTimeMillis()}_${i+1}.jpg"
-            val thumbnailPath = "${androidID}/thumbnail/${System.currentTimeMillis()}_${i+1}.jpg"
-//            pathList.add(path)
-            pathList.add(thumbnailPath)
+//            val thumbnailPath = "${androidID}/thumbnail/${System.currentTimeMillis()}_${i+1}.jpg"
+            pathList.add(path)
+//            pathList.add(thumbnailPath)
             FirebaseFileManager.uploadImage(
                 uri,
                 path,
@@ -339,26 +368,26 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
             )
 
             // 이지윤: 섬네일 파일 업로드 추가 - 24.01.24
-            resizeImage(binding.root.context, uri, 150, 150,
-                onSuccess = { bitmap ->
-                    // 조정된 이미지 업로드
-                    FirebaseFileManager.uploadImage(
-                        bitmap,
-                        thumbnailPath,
-                        onSuccess = {
-
-                        },
-                        onFailure = { exception ->
-                            // 업로드 실패 시
-                            // TODO: 업로드 실패에 따른 추가 작업 수행
-//                    showToast("이미지 업로드 실패: ${exception.message}")
-                        }
-                    )
-                },
-                onFailure = { exception ->
-                    // 오류 처리
-                }
-            )
+//            resizeImage(binding.root.context, uri, 150, 150,
+//                onSuccess = { bitmap ->
+//                    // 조정된 이미지 업로드
+//                    FirebaseFileManager.uploadImage(
+//                        bitmap,
+//                        thumbnailPath,
+//                        onSuccess = {
+//
+//                        },
+//                        onFailure = { exception ->
+//                            // 업로드 실패 시
+//                            // TODO: 업로드 실패에 따른 추가 작업 수행
+////                    showToast("이미지 업로드 실패: ${exception.message}")
+//                        }
+//                    )
+//                },
+//                onFailure = { exception ->
+//                    // 오류 처리
+//                }
+//            )
 
         }
         return pathList
@@ -506,7 +535,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
      */
     private fun updateAdapter() {
         val recyclerView = binding.rvImageSlide
-        imageAdapter = MultiImageAdapter(uriList, binding.root.context)
+        imageAdapter = MultiImageAdapter(uriList, binding.root.context, this)
         recyclerView.adapter = imageAdapter
         recyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
     }
