@@ -53,6 +53,19 @@
         <item name="android:background">@drawable/rounded_modal_bottom_sheet</item>
     </style>
 
+<!--    달력 날짜 부분 텍스트-->
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+<!--        <item name="android:textColor">@color/navi_sw</item>-->
+<!--        <item name="fontFamily">@font/nanummyeongjo</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+    </style>
+<!--    달력 요일 부분 텍스트 -->
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+<!--        <item name="android:textColor">@color/note</item>-->
+        <item name="android:textStyle">bold</item>
+<!--        <item name="fontFamily">@font/notosans</item>-->
+    </style>
+
 
 
 </resources>

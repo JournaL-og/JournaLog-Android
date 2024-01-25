@@ -31,6 +31,7 @@ import net.developia.todolist.db.JournaLogDatabase
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.Calendar
 
 //이상원 - 24.01.19, 반정현 - 24.01.22 수정
 class CalendarFragment : BaseFragment(),MemoInsertCallback {
@@ -71,33 +72,39 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
 //        calendarView.setBackgroundColor(resources.getColor(R.color.note))
         val formatter_hangul = DateTimeFormatter.ofPattern("M월 dd일 (EE)")
 
-
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         memoDao = db.getMemoDao()
         calendarView.setOnDateChangedListener { widget, date, selected ->
             binding.tvSelectedDate.text = date.date.format(formatter_hangul) // 날짜 클릭 시 좌상단 날짜 변경
 //            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
             getMemos(date)
-
         }
-
         calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 선택하기
         getMemos(CalendarDay.today()) //오늘 메모 가져오기
         binding.tvSelectedDate.text=calendarView.selectedDate!!.date.format(formatter_hangul)// 초기 좌상단 날짜 설정
-//        calendarView.setSelectedDate(CalendarDay.today())
-//        calendarView.setDateSelected(CalendarDay.today() )calendarFragment
 
-        // 날짜 아래에 점 찍기
+        binding.btnToday.setOnClickListener{
+            val date =  CalendarDay.today()
+            calendarView.setCurrentDate(date)
+            calendarView.selectedDate = date // 오늘 날짜 선택하기
+//            calendarView.setDateSelected(CalendarDay.today(), true)
+//            calendarView.set
+//            calendarView.state().edit().set
+            binding.tvSelectedDate.text = date.date.format(formatter_hangul) // 날짜 클릭 시 좌상단 날짜 변경
+//            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
+            getMemos(date)
+        }
+//        calendarView.setOnMonthChangedListener{
+//
+//        }
+        // 메모 있는 날짜 아래에 점 찍기
         dotCalendar()
-
-
-//        val otherDayDecorator = EventDecorator(5f, Color.BLUE, setOf(CalendarDay.today()))
-//        calendarView.addDecorator(otherDayDecorator)
-//        val eventDecorator = EventDecorator(Color.GRAY, setOf(CalendarDay.today()))
-//        calendarView.addDecorator(eventDecorator)
 
         // 우상단 달력 버튼 클릭 시 달력 펴기 접기
         // 현재 월의 시작일
+//        var endTimeCalendar = Calendar.getInstance()
+//        var selectedDay = calendarView.selectedDate!!
+//        endTimeCalendar.set(Calendar.MONTH, selectedDay.month)
 
         binding.btnCalendar.setOnClickListener {
             if (isWeek) {
@@ -114,15 +121,14 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
         }
 
+
+
         binding.fabAddMemo.setOnClickListener{
             val modal = MemoCreateBottomSheet(calendarView.selectedDate!!,this,null)
             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
             modal.setTargetFragment(this, 1)
             modal.show(requireActivity().supportFragmentManager, MemoCreateBottomSheet.TAG)
         }
-
-
-//        getMemos()
         return binding.root
     }
 

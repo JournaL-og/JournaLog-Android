@@ -7,7 +7,6 @@ import android.graphics.drawable.shapes.RoundRectShape
 
 // 이상원 - 24.01.23
 object MemoRightColorSetting {
-
     fun changeRightColor(color: Int, layerDrawable: LayerDrawable): LayerDrawable {
         val rightPart = ShapeDrawable(RoundRectShape(floatArrayOf(30f, 30f, 30f, 30f, 30f, 30f, 30f, 30f), null, null))
         rightPart.paint.color = color
