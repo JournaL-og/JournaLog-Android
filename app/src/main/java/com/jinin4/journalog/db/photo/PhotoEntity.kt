@@ -9,5 +9,6 @@ import androidx.room.PrimaryKey
 data class PhotoEntity(
     @PrimaryKey(autoGenerate = true) var photo_id : Int? = null,
     @ColumnInfo(name="memo_id") val memo_id : Int,
-    @ColumnInfo(name="photo_url") val photo_url : String
+    @ColumnInfo(name="photo_url") val photo_url : String,
+    @ColumnInfo(name="photo_uri") val photo_uri : String
 )

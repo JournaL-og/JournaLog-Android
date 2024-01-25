@@ -107,7 +107,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ll_colorPick"
-
         />
 
     <EditText
@@ -156,7 +155,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="18dp"
         android:layout_marginTop="18dp"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_add_camera"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -169,10 +168,26 @@
 
         android:layout_margin="18dp"
         android:layout_marginTop="11dp"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_photo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_camera"
+        app:layout_constraintTop_toBottomOf="@+id/txt_date" />
+<!--    android:layout_marginTop="11dp"-->
+    <ImageButton
+        android:id="@+id/btn_removeMemo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginStart="21dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_trash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_gallery"
         app:layout_constraintTop_toBottomOf="@+id/txt_date" />
 
 

@@ -39,20 +39,20 @@ class PhotoFragment : BaseFragment() {
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         photoDao = db.getPhotoDao()
 
-        binding.btnCallDb.setOnClickListener{
-
-            // sqlite 에는 Date 타입이 없어 스트링으로 넣어야 함!! 참고하세요
-            val photoEntity = PhotoEntity(null, 1,"photo/test.png")
-
-            Thread{
-                photoDao.insertPhoto(photoEntity)
-                requireActivity().runOnUiThread{
-                    photoList.add(photoEntity)
-                    adapter.notifyItemInserted(photoList.size - 1) // 어댑터에 새 아이템 추가 알림
-                    Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }.start()
-        }
+//        binding.btnCallDb.setOnClickListener{
+//
+//            // sqlite 에는 Date 타입이 없어 스트링으로 넣어야 함!! 참고하세요
+//            val photoEntity = PhotoEntity(null, 1,"photo/test.png")
+//
+//            Thread{
+//                photoDao.insertPhoto(photoEntity)
+//                requireActivity().runOnUiThread{
+//                    photoList.add(photoEntity)
+//                    adapter.notifyItemInserted(photoList.size - 1) // 어댑터에 새 아이템 추가 알림
+//                    Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }.start()
+//        }
 
         getAllPhotoList()
         return binding.root

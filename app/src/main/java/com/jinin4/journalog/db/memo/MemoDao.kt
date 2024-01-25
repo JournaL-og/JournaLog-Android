@@ -49,6 +49,9 @@ interface MemoDao {
     @Query("DELETE FROM memo")
     fun deleteAllMemos()
 
+    @Query("Delete from memo where memo_id = :id")
+    fun deleteMemoByMemoId(id : Int)
+
     @Update
     fun updateMemo(memo: MemoEntity)
 }
