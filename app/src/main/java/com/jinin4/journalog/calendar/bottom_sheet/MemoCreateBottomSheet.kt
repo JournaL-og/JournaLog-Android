@@ -54,7 +54,7 @@ import com.jinin4.journalog.db.photo.MemoPhotoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
 import com.jinin4.journalog.firebase.storage.FirebaseFileManager
-import com.jinin4.journalog.photo.PhotoDataHolder
+//import com.jinin4.journalog.photo.PhotoDataHolder
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
 import java.io.File
@@ -242,7 +242,7 @@ class MemoCreateBottomSheet(
                         val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
                         val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
                         memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
-                        PhotoDataHolder.isDataChanged = true
+//                        PhotoDataHolder.isDataChanged = true
                     }
                 }
                 requireActivity().runOnUiThread {
@@ -347,9 +347,7 @@ class MemoCreateBottomSheet(
         val pathList = ArrayList<String>()
         for ((i, uri) in uriList.withIndex()) {
             val path = "${androidID}/${System.currentTimeMillis()}_${i+1}.jpg"
-//            val thumbnailPath = "${androidID}/thumbnail/${System.currentTimeMillis()}_${i+1}.jpg"
             pathList.add(path)
-//            pathList.add(thumbnailPath)
             FirebaseFileManager.uploadImage(
                 uri,
                 path,
