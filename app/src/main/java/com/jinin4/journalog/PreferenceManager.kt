@@ -22,6 +22,7 @@ object PreferenceSerializer : Serializer<Preference> {
     }
 
     override suspend fun writeTo(t: Preference, output: OutputStream) = t.writeTo(output)
+    
 }
 
 val Context.dataStore: DataStore<Preference> by dataStore(

@@ -10,17 +10,20 @@ import androidx.room.Update
 @Dao
 interface PhotoDao {
 
-    @Query("select photo_id,memo_id,photo_url from photo")
+    @Query("select photo_id,memo_id,photo_url,photo_uri from photo")
     fun getAllPhotos(): List<PhotoEntity>
 
-    @Query("select photo_id,memo_id,photo_url from photo where memo_id = :memo_id")
-    fun getPhotoById(memo_id: Int): List<PhotoEntity>
+    @Query("select photo_id,memo_id,photo_url,photo_uri from photo where memo_id = :memo_id")
+    fun getPhotoByMemoId(memo_id: Int): List<PhotoEntity>
 
     @Insert
     fun insertPhoto(photo: PhotoEntity): Long
 
     @Delete
     fun deletePhoto(photo: PhotoEntity)
+
+    @Query("delete from photo where memo_id = :id")
+    fun deletePhotoByMemoId(id: Int)
 
     @Update
     fun updatePhoto(photo: PhotoEntity)

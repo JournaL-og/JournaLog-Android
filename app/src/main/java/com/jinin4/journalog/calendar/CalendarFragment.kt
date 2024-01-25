@@ -2,17 +2,20 @@ package com.jinin4.journalog.calendar
 
 
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.Preference
 import com.jinin4.journalog.R
+import com.jinin4.journalog.RecyclerViewItemClickListener
 import com.jinin4.journalog.dataStore
 import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
 import com.jinin4.journalog.databinding.FragmentCalendarBinding
@@ -82,7 +85,7 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         getMemos(CalendarDay.today()) //오늘 메모 가져오기
         binding.tvSelectedDate.text=calendarView.selectedDate!!.date.format(formatter_hangul)// 초기 좌상단 날짜 설정
 //        calendarView.setSelectedDate(CalendarDay.today())
-//        calendarView.setDateSelected(CalendarDay.today() )
+//        calendarView.setDateSelected(CalendarDay.today() )calendarFragment
 
         // 날짜 아래에 점 찍기
         dotCalendar()
@@ -112,7 +115,7 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         }
 
         binding.fabAddMemo.setOnClickListener{
-            val modal = MemoCreateBottomSheet(calendarView.selectedDate!!,this)
+            val modal = MemoCreateBottomSheet(calendarView.selectedDate!!,this,null)
             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
             modal.setTargetFragment(this, 1)
             modal.show(requireActivity().supportFragmentManager, MemoCreateBottomSheet.TAG)
@@ -136,7 +139,7 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     private fun setRecyclerView() {
         // 리사이클러뷰 설정
         requireActivity().runOnUiThread {
-            adapter = CalendarMemoRecyclerViewAdapter(memoList, true) // ❷ 어댑터 객체 할당
+            adapter = CalendarMemoRecyclerViewAdapter(memoList, true,binding.calendarView.selectedDate!!,this) // ❷ 어댑터 객체 할당
             binding.recyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.recyclerView.layoutManager = LinearLayoutManager(binding.root.context) // 레이아웃 매니저 설정
         }

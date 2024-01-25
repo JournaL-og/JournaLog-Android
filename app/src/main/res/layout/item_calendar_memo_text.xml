@@ -21,17 +21,19 @@
 
     <TextView
         android:id="@+id/tv_content"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:background="@drawable/rounded_border"
         android:padding="10dp"
         android:paddingEnd="30dp"
-        android:text="메모 테스트ek"
+        android:text="메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek"
         app:layout_constraintStart_toEndOf="@+id/tv_timestamp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_max="330dp"
+
+        app:layout_constraintWidth_max="255dp"
         />
+<!--    app:layout_constraintHeight_max="330dp"-->
 <!--    android:background="@drawable/rounded_textview_background_content"-->
 <!--    app:layout_constraintWidth_percent="0.83"-->
 </androidx.constraintlayout.widget.ConstraintLayout>

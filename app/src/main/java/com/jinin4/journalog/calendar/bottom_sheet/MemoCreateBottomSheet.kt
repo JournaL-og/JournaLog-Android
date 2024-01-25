@@ -7,6 +7,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ClipData
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,6 +17,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.Editable
 import com.bumptech.glide.request.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +27,11 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -35,7 +39,9 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.jinin4.journalog.Converter
 import com.jinin4.journalog.MemoRightColorSetting
+import com.jinin4.journalog.MemoRightColorSetting.getColorById
 import com.jinin4.journalog.R
 import com.jinin4.journalog.calendar.MemoInsertCallback
 import com.jinin4.journalog.databinding.BottomSheetMemoCreateBinding
@@ -57,7 +63,7 @@ import java.util.Calendar
 
 
 // 이상원 - 24.01.22
-class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoInsertCallback) : BottomSheetDialogFragment()  {
+class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoInsertCallback, val memoEntity:MemoEntity?) : BottomSheetDialogFragment()  {
 
     private lateinit var binding: BottomSheetMemoCreateBinding
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -95,20 +101,45 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
 
         val formatterMonthDay = org.threeten.bp.format.DateTimeFormatter.ofPattern("MM월 dd일")
+
         strDateMonthDay = selectedDate.date.format(formatterMonthDay).toString()
         binding.txtDate.text = strDateMonthDay
 
+        if (memoEntity != null) {
+            val editableText: Editable =
+                Editable.Factory.getInstance().newEditable(memoEntity.content)
+            binding.edtContent.text = editableText
+            binding.btnRemoveMemo.visibility = View.VISIBLE
+            filterMemosByColorId(memoEntity.color_id)
+            binding.txtTime.text = memoEntity.timestamp
+            Thread{
+                val listPhotoEntity = photoDao.getPhotoByMemoId(memoEntity.memo_id!!)
+                for (photoEntity in listPhotoEntity) {
+                    uriList.add(photoEntity.photo_uri.toUri())
+                }
+                updateAdapter()
+            }.start()
 
-        val currentDateTime = LocalDateTime.now()
-        val currTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-        str_time = currentDateTime.format(currTimeFormatter)
-        binding.txtTime.text = str_time
+        } else {
+            filterMemosByColorId(1)
+            val currentDateTime = LocalDateTime.now()
+            val currTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+            str_time = currentDateTime.format(currTimeFormatter)
+            binding.txtTime.text = str_time
+        }
+
+
+
 
         val formatterDate = org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")
         strDateTime = selectedDate.date.format(formatterDate).toString()
 
         binding.fabMemoInsert.setOnClickListener{
-            insertMemo()
+            if (memoEntity == null) {
+                insertMemo()
+            } else {
+                updateMemo()
+            }
         }
 
         binding.txtDate.setOnClickListener {
@@ -125,6 +156,9 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         binding.btnGallery.setOnClickListener{
             openGallery()
         }
+        binding.btnRemoveMemo.setOnClickListener{
+            deleteMemo(memoEntity!!)
+        }
 
 
         binding.redBtn.setOnClickListener { filterMemosByColorId(1) }
@@ -134,21 +168,46 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
         binding.blueBtn.setOnClickListener { filterMemosByColorId(5) }
         binding.indigoBtn.setOnClickListener { filterMemosByColorId(6) }
         binding.puppleBtn.setOnClickListener { filterMemosByColorId(7) }
-        binding.redBtn.performClick()
+//        binding.redBtn.performClick()
         return binding.root
     }
+
+    private fun deleteMemo(memoEntity: MemoEntity) {
+        val rootContext = binding.root.context
+        val builder: AlertDialog.Builder = AlertDialog.Builder(rootContext)
+        builder.setTitle("메모 삭제")
+        builder.setMessage("메모를 삭제하시겠습니까?")
+        builder.setNegativeButton("취소", null)
+        builder.setPositiveButton("네",
+            object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    if (memoEntity != null) {
+                        Thread {
+                            memoDao.deleteMemo(memoEntity)
+                            photoDao.deletePhotoByMemoId(memoEntity.memo_id!!)
+                            memoPhotoDao.deleteMemoPhotoById(memoEntity.memo_id!!)
+                            requireActivity().runOnUiThread {
+                                callback.onMemoInserted()
+                                dismiss()
+                            }
+                        }.start()
+                    }
+                }
+            }
+        )
+        val alertDialog = builder.create()
+        alertDialog.setOnShowListener {
+            val textColor = ContextCompat.getColor(requireActivity(), getColorById(insertedColorId))
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(textColor)
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(textColor)
+        }
+        alertDialog.show()
+    }
+
+
     private fun filterMemosByColorId(colorId:Int) {
         val layerDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.rounded_textview_background_content) as LayerDrawable
-        val memoColor =  when (colorId) {
-            1 -> R.color.red_sw
-            2 -> R.color.orange_sw
-            3 -> R.color.yellow_sw
-            4 -> R.color.green_sw
-            5 -> R.color.blue_sw
-            6 -> R.color.navi_sw
-            7 -> R.color.purple_sw
-            else -> R.color.red_sw
-        }
+        val memoColor =  getColorById(colorId)
         binding.edtContent.background=
             MemoRightColorSetting.changeRightColor(
                 ContextCompat.getColor(binding.root.context, memoColor),layerDrawable)
@@ -171,7 +230,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
         val editText = binding.edtContent
         editText.postDelayed({
-            editText.requestFocus()
+            editText.requestFocus(1)
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         }, 300)
@@ -198,14 +257,13 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
 
                 val insertDate = insertedDateTime ?: strDateTime
                 val insertTime = binding.txtTime.text
-                val memoEntity = MemoEntity(null, edtCon, "${insertDate} ${insertTime}:00", insertedColorId)
+                val insertMemoEntity = MemoEntity(null, edtCon, "${insertDate} ${insertTime}:00", insertedColorId)
 
-                // 일단 컬러 id 1로 넣음
-                val insertedMemoId = memoDao.insertMemo(memoEntity).toInt()
+                val insertedMemoId = memoDao.insertMemo(insertMemoEntity).toInt()
                 if (uriList.isNotEmpty()) {
                     val pathList = uploadImageToFireBase(uriList)
                     for ((i, path) in pathList.withIndex()) {
-                        val photoEntity = PhotoEntity(null,insertedMemoId,path)
+                        val photoEntity = PhotoEntity(null,insertedMemoId,path,uriList[i].toString())
                         val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
                         val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
                         memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
@@ -218,6 +276,39 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
                 }
             }.start()
         }
+    }
+
+    private fun updateMemo() {
+        val edtCon = binding.edtContent.text.toString()
+        if (edtCon.isBlank()) {
+            requireActivity().runOnUiThread{
+                showToast("메모나 사진을 추가해주세요.")
+            }
+            return
+        }
+
+        val updateDate = insertedDateTime ?: Converter().fromCalendarDay(selectedDate)
+        val updateTime = binding.txtTime.text
+        var updatedMemoEntity = MemoEntity(memoEntity!!.memo_id, edtCon,"${updateDate} ${updateTime}:00",insertedColorId)
+
+        Thread{
+            memoDao.updateMemo(updatedMemoEntity)
+//            if (uriList.isNotEmpty()) {
+//                val pathList = uploadImageToFireBase(uriList)
+//                for ((i, path) in pathList.withIndex()) {
+//                    val photoEntity = PhotoEntity(null,insertedMemoId,path)
+//                    val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
+//                    val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
+//                    memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
+//                }
+//            }
+            requireActivity().runOnUiThread {
+                callback.onMemoInserted()
+                dismiss()
+            }
+        }.start()
+
+
     }
 
 
@@ -425,6 +516,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
     }
 
 
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -437,11 +529,8 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
                     openCamera()
                 } else {
                     // 권한이 거부된 경우
-                    Toast.makeText(
-                        requireContext(),
-                        "카메라 권한이 필요합니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast("카메라 권한이 필요합니다.")
+
                 }
             }
         }
