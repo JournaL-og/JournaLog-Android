@@ -1,25 +1,27 @@
 package com.jinin4.journalog.photo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.jinin4.journalog.databinding.FragmentPhotoBinding
+import com.jinin4.journalog.db.memo.MemoDao
+import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
+import com.jinin4.journalog.db.photo.PhotoEntity
 import com.jinin4.journalog.firebase.storage.FirebaseFileManager
+import kotlinx.coroutines.*
 import net.developia.todolist.db.JournaLogDatabase
 
 //이상원 - 24.01.19
 //이지윤 수정 - 24.01.22
-
-object PhotoDataHolder {
-    var uriList: MutableList<String>? = null
-    var isDataChanged = false
-}
 
 
 class PhotoFragment : Fragment() {
@@ -28,7 +30,11 @@ class PhotoFragment : Fragment() {
     private lateinit var adapter: PhotoRecyclerViewAdapter
     lateinit var db: JournaLogDatabase
     lateinit var photoDao: PhotoDao
-    private var uriList: MutableList<String> =  mutableListOf<String>()
+    lateinit var memoDao: MemoDao
+
+    private var photoList: MutableList<PhotoEntity> =  mutableListOf<PhotoEntity>()
+    private var memoList: MutableList<MemoEntity> =  mutableListOf<MemoEntity>()
+
     private var isDataLoaded = false // 데이터 로드 여부를 확인하는 플래그
 
     override fun onCreateView(
@@ -41,6 +47,7 @@ class PhotoFragment : Fragment() {
 
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         photoDao = db.getPhotoDao()
+        memoDao = db.getMemoDao()
 
         if (!isDataLoaded) {
             getAllPhotoList()
@@ -50,41 +57,33 @@ class PhotoFragment : Fragment() {
     }
 
     private fun getAllPhotoList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            // 데이터베이스 작업 수행
+            val photos = photoDao.getAllPhotos()
 
-        if (PhotoDataHolder.uriList == null || PhotoDataHolder.isDataChanged) {
-            val androidID: String = Settings.Secure.getString(
-                context?.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )+"/thumbnail" ?: "default"
+            val countText:TextView = binding.countText
+            countText.text = photos.size.toString() + "개"
 
-            FirebaseFileManager.loadImageFromFirebase(androidID) { uri ->
-                PhotoDataHolder.uriList = uri
-                uriList = uri
-                Log.d("FirebaseFileManager","uri found: ${uri}, uri size: ${uri.size}")
+            photos.forEach { photo ->
+                photoList.add(photo)
+                val memo = memoDao.getMemoById(photo.memo_id)
+                memo?.let {
+                    memoList.add(it)
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                // UI 업데이트 및 리사이클러뷰 설정
                 setRecyclerView()
             }
-        } else {
-            uriList = PhotoDataHolder.uriList!!
-            setRecyclerView()
         }
 }
 
     private fun setRecyclerView() {
         requireActivity().runOnUiThread {
-            adapter = PhotoRecyclerViewAdapter(binding.root.context, uriList) // ❷ 어댑터 객체 할당
+            adapter = PhotoRecyclerViewAdapter(binding.root.context, photoList, memoList , parentFragmentManager) // ❷ 어댑터 객체 할당
             binding.imageRecyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.imageRecyclerView.layoutManager = GridLayoutManager(binding.root.context,3) // 레이아웃 매니저 설정
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("FirebaseFileManager", "onResume")
-        Log.d("FirebaseFileManager onResume isDataChanged", PhotoDataHolder.isDataChanged.toString())
-        if (PhotoDataHolder.isDataChanged) {
-            getAllPhotoList() // 데이터를 다시 불러옵니다
-            PhotoDataHolder.isDataChanged = false
-            Log.d("FirebaseFileManager onResume isDataChanged2", PhotoDataHolder.isDataChanged.toString())
         }
     }
 }
