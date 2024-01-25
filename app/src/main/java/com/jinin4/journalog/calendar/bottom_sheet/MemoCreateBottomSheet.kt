@@ -52,7 +52,7 @@ import com.jinin4.journalog.db.photo.MemoPhotoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
 import com.jinin4.journalog.firebase.storage.FirebaseFileManager
-import com.jinin4.journalog.photo.PhotoDataHolder
+//import com.jinin4.journalog.photo.PhotoDataHolder
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
 import java.io.File
@@ -267,7 +267,7 @@ class MemoCreateBottomSheet(val selectedDate: CalendarDay, val callback: MemoIns
                         val insertedPhotoId = photoDao.insertPhoto(photoEntity).toInt()
                         val memoPhotoEntity = MemoPhotoEntity(null,insertedMemoId, insertedPhotoId)
                         memoPhotoDao.insertMemoPhoto(memoPhotoEntity)
-                        PhotoDataHolder.isDataChanged = true
+//                        PhotoDataHolder.isDataChanged = true
                     }
                 }
                 requireActivity().runOnUiThread {

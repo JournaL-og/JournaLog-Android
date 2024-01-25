@@ -7,16 +7,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.jinin4.journalog.R
 import com.jinin4.journalog.databinding.ItemPhotoBinding
+import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.db.photo.PhotoEntity
 
 
 // 이지윤 작성 - 24.01.22
-class PhotoRecyclerViewAdapter(private val context: Context, private val uriList : MutableList<String>,private val fragmentManager: FragmentManager)
+class PhotoRecyclerViewAdapter(private val context: Context, private val photoList: MutableList<PhotoEntity>, private val memoList: MutableList<MemoEntity>, private val fragmentManager: FragmentManager)
+//class PhotoRecyclerViewAdapter(private val context: Context, private val uriList : MutableList<String>,private val fragmentManager: FragmentManager)
     : RecyclerView.Adapter<PhotoRecyclerViewAdapter.PhotoViewHolder>() {
 
     inner class PhotoViewHolder(binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -31,8 +35,9 @@ class PhotoRecyclerViewAdapter(private val context: Context, private val uriList
             imagePhoto.setOnClickListener {
                 val position = bindingAdapterPosition // 현재 뷰 홀더의 위치 가져오기
                 if (position != RecyclerView.NO_POSITION) {
-                    val imageUrl = uriList[position].replace("%2Fthumbnail", "") // 확대 이미지는 원본으로 불러오기
-                    val dialogFragment = CustomPhotoDialogFragment(imageUrl)
+                    val imageUri = photoList[position].photo_uri.toUri()
+                    val memoInfo = memoList[position]
+                    val dialogFragment = CustomPhotoDialogFragment(imageUri,memoInfo)
                     dialogFragment.show(fragmentManager, "customDialog")
 
                 }
@@ -47,15 +52,15 @@ class PhotoRecyclerViewAdapter(private val context: Context, private val uriList
     }
 
     override fun getItemCount(): Int {
-        return uriList.size
+        return photoList.size
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        val imageUrl = uriList[position]
+        val imageUri = photoList[position].photo_uri.toUri()
 
         holder.apply {
             Glide.with(holder.itemView.context)
-                .load(imageUrl)
+                .load(imageUri)
                 .override(150, 150)
                 .placeholder(R.drawable.skeleton_img)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -69,9 +74,9 @@ class PhotoRecyclerViewAdapter(private val context: Context, private val uriList
     }
 
     private fun preloadImages() {
-        uriList.forEach { imageUrl ->
+        photoList.forEach { photo ->
             Glide.with(context)
-                .load(imageUrl)
+                .load(photo.photo_uri.toUri())
                 .override(150, 150)
                 .placeholder(R.drawable.skeleton_img)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

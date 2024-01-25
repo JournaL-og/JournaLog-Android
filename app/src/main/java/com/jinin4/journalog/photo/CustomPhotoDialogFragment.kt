@@ -2,6 +2,7 @@ package com.jinin4.journalog.photo
 
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,9 +17,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.jinin4.journalog.R
+import com.jinin4.journalog.db.memo.MemoEntity
 import kotlin.math.abs
 
-class CustomPhotoDialogFragment(private val imageUrl: String) : DialogFragment() {
+class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo: MemoEntity) : DialogFragment() {
 
     private var touchStartY = 0f
     private var touchCurrentY = 0f
@@ -37,21 +39,21 @@ class CustomPhotoDialogFragment(private val imageUrl: String) : DialogFragment()
         val constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraintLayout)
         constraintLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight)
 
-        Log.d("Firebase dialog url", imageUrl)
+        Log.d("Firebase dialog url", imageUri.toString())
         // 이미지 뷰 설정
         val imageView = view.findViewById<ImageView>(R.id.ivCustomImage)
-        Glide.with(this).load(imageUrl).into(imageView)
+        Glide.with(this).load(imageUri).into(imageView)
 
         val closeButton = view.findViewById<ImageButton>(R.id.btnClose)
         closeButton.setOnClickListener { dismiss() }
 
         // 날짜 텍스트 설정
         val dateTextView = view.findViewById<TextView>(R.id.tvDate)
-        dateTextView.text = "2024년 1월 25일 (목) 오전 11:32"
+        dateTextView.text = memoInfo.timestamp
 
         // 추가 텍스트 설정
         val additionalTextView = view.findViewById<TextView>(R.id.tvAdditionalText)
-        additionalTextView.text = "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ"
+        additionalTextView.text = memoInfo.content
 
         imageView.setOnTouchListener { v, event ->
             when (event.action) {
