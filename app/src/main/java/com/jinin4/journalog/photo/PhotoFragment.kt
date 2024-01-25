@@ -1,32 +1,35 @@
 package com.jinin4.journalog.photo
 
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.databinding.FragmentPhotoBinding
 import com.jinin4.journalog.db.photo.PhotoDao
-import com.jinin4.journalog.db.photo.PhotoEntity
+import com.jinin4.journalog.firebase.storage.FirebaseFileManager
 import net.developia.todolist.db.JournaLogDatabase
 
 //이상원 - 24.01.19
 //이지윤 수정 - 24.01.22
-class PhotoFragment : BaseFragment() {
+
+object PhotoDataHolder {
+    var uriList: MutableList<String>? = null
+    var isDataChanged = false
+}
+
+
+class PhotoFragment : Fragment() {
 
     private lateinit var binding: FragmentPhotoBinding
     private lateinit var adapter: PhotoRecyclerViewAdapter
-
-    private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
-    private val storageRef: StorageReference = firebaseStorage.reference
-
     lateinit var db: JournaLogDatabase
     lateinit var photoDao: PhotoDao
-    lateinit var photoList: ArrayList<PhotoEntity>
+    private var uriList: MutableList<String> =  mutableListOf<String>()
+    private var isDataLoaded = false // 데이터 로드 여부를 확인하는 플래그
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,37 +42,49 @@ class PhotoFragment : BaseFragment() {
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         photoDao = db.getPhotoDao()
 
-//        binding.btnCallDb.setOnClickListener{
-//
-//            // sqlite 에는 Date 타입이 없어 스트링으로 넣어야 함!! 참고하세요
-//            val photoEntity = PhotoEntity(null, 1,"photo/test.png")
-//
-//            Thread{
-//                photoDao.insertPhoto(photoEntity)
-//                requireActivity().runOnUiThread{
-//                    photoList.add(photoEntity)
-//                    adapter.notifyItemInserted(photoList.size - 1) // 어댑터에 새 아이템 추가 알림
-//                    Toast.makeText(binding.root.context, "추가되었습니다.", Toast.LENGTH_SHORT).show()
-//                }
-//            }.start()
-//        }
+        if (!isDataLoaded) {
+            getAllPhotoList()
+        }
 
-        getAllPhotoList()
         return binding.root
     }
 
     private fun getAllPhotoList() {
-        Thread {
-            photoList = ArrayList(photoDao.getAllPhotos())
+
+        if (PhotoDataHolder.uriList == null || PhotoDataHolder.isDataChanged) {
+            val androidID: String = Settings.Secure.getString(
+                context?.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )+"/thumbnail" ?: "default"
+
+            FirebaseFileManager.loadImageFromFirebase(androidID) { uri ->
+                PhotoDataHolder.uriList = uri
+                uriList = uri
+                Log.d("FirebaseFileManager","uri found: ${uri}, uri size: ${uri.size}")
+                setRecyclerView()
+            }
+        } else {
+            uriList = PhotoDataHolder.uriList!!
             setRecyclerView()
-        }.start()
-    }
+        }
+}
 
     private fun setRecyclerView() {
         requireActivity().runOnUiThread {
-            adapter = PhotoRecyclerViewAdapter(photoList) // ❷ 어댑터 객체 할당
+            adapter = PhotoRecyclerViewAdapter(binding.root.context, uriList) // ❷ 어댑터 객체 할당
             binding.imageRecyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.imageRecyclerView.layoutManager = GridLayoutManager(binding.root.context,3) // 레이아웃 매니저 설정
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("FirebaseFileManager", "onResume")
+        Log.d("FirebaseFileManager onResume isDataChanged", PhotoDataHolder.isDataChanged.toString())
+        if (PhotoDataHolder.isDataChanged) {
+            getAllPhotoList() // 데이터를 다시 불러옵니다
+            PhotoDataHolder.isDataChanged = false
+            Log.d("FirebaseFileManager onResume isDataChanged2", PhotoDataHolder.isDataChanged.toString())
         }
     }
 }
