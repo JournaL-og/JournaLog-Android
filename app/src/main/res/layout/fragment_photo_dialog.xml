@@ -14,7 +14,6 @@
         android:layout_height="match_parent"/>
 
 
-
     <ImageButton
         android:id="@+id/btnClose"
         android:layout_width="40dp"
