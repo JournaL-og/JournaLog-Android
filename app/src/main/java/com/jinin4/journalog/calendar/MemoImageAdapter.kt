@@ -1,23 +1,17 @@
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.RoundedCorner
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.jinin4.journalog.R
-import com.jinin4.journalog.calendar.bottom_sheet.ImageUpdatedCallback
-import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
-import com.jinin4.journalog.databinding.BottomSheetMemoCreateBinding
+import com.jinin4.journalog.calendar.ImageDetailActivity
 import com.jinin4.journalog.databinding.ItemMemoGetImageBinding
-import com.jinin4.journalog.databinding.ItemMemoInsertImageBinding
 
 
 // 이상원 - 24.01.23
@@ -49,12 +43,31 @@ class MemoImageAdapter(
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageUri: Uri = list[position]
+
+        when (list.size) {
+            1 -> glideImage(imageUri, holder,20,800,800)
+            2 -> glideImage(imageUri, holder,20,400,700)
+            3 -> glideImage(imageUri, holder,20,300,300)
+            4-> glideImage(imageUri, holder,20,300,300)
+            else -> glideImage(imageUri, holder,1,180,180)
+        }
+
+        holder.image.setOnClickListener{
+
+                // 새로운 액티비티 시작
+            val intent = Intent(context, ImageDetailActivity::class.java)
+            intent.putExtra("imageResourceId", list[position].toString())
+            context.startActivity(intent)
+
+        }
+    }
+
+    private fun glideImage(imageUri: Uri, holder: ViewHolder, radius:Int,width:Int, height:Int) {
         Glide.with(context)
             .load(imageUri)
-            .transform(MultiTransformation(CenterCrop(), RoundedCorners(20)))
-            .apply(RequestOptions().override(300, 300))
+            .transform(MultiTransformation(CenterCrop(), RoundedCorners(radius)))
+            .apply(RequestOptions().override(width, height))
             .into(holder.image)
-
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.

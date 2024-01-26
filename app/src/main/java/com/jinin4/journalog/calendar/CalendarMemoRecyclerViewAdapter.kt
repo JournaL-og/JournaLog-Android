@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -97,19 +98,46 @@ class CalendarMemoRecyclerViewAdapter(
         holder.timestamp.text = memoData.memoEntity.timestamp // 여기서 timestamp는 HH:mm형식이다
         holder.content.text = memoData.memoEntity.content
 
-        holder.content.setOnClickListener{
+        if (isOnlyText) {
+            holder.content.setOnClickListener {
 //            Toast.makeText(binding_.root.context, "dd", Toast.LENGTH_SHORT).show()
-            val modal = MemoCreateBottomSheet(selectedDay, calendarFragment, memoData.memoEntity)
-            modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
-            modal.setTargetFragment(calendarFragment, 1)
-            modal.show(calendarFragment.requireActivity().supportFragmentManager, MemoCreateBottomSheet.TAG)
+                val modal =
+                    MemoCreateBottomSheet(selectedDay, calendarFragment, memoData.memoEntity)
+                modal.setStyle(
+                    DialogFragment.STYLE_NORMAL,
+                    R.style.RoundCornerBottomSheetDialogTheme
+                )
+                modal.setTargetFragment(calendarFragment, 1)
+                modal.show(
+                    calendarFragment.requireActivity().supportFragmentManager,
+                    MemoCreateBottomSheet.TAG
+                )
+            }
+        } else {
+            holder.layoutContentImage!!.setOnClickListener{
+//            Toast.makeText(binding_.root.context, "dd", Toast.LENGTH_SHORT).show()
+                val modal = MemoCreateBottomSheet(selectedDay, calendarFragment, memoData.memoEntity)
+                modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
+                modal.setTargetFragment(calendarFragment, 1)
+                modal.show(calendarFragment.requireActivity().supportFragmentManager, MemoCreateBottomSheet.TAG)
+            }
         }
+
 
         if (!isOnlyText) {
             if (memoData.uris.isNotEmpty()) {
                 val photoUriList = convertStringListToUriArrayList(memoData.uris)
                 val childAdapter = MemoImageAdapter(photoUriList, context)
-                holder.imageGrid?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                when (photoUriList.size) {
+                    1-> holder.imageGrid?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    2-> holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
+                    3->holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
+//                    3->holder.imageGrid?.layoutManager = CustomLayoutManager(context)
+                    4->holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
+                    else -> holder.imageGrid?.layoutManager = GridLayoutManager(context,4)
+                }
+//                holder.imageGrid?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//                holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
                 holder.imageGrid?.adapter = childAdapter
             }
         }

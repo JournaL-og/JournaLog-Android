@@ -1,12 +1,18 @@
 package com.jinin4.journalog
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.util.TypedValue
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.jinin4.journalog.calendar.CalendarFragment
@@ -49,7 +55,13 @@ class MainActivity : AppCompatActivity() {
             navView.itemActiveIndicatorColor = pickColorStateList
         }
 
-//        R.id.itm_calendar_home
+        checkAnyPermission(Manifest.permission.CAMERA)
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.TIRAMISU) {
+            checkAnyPermission(Manifest.permission.READ_MEDIA_IMAGES)
+        } else{
+            checkAnyPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
         setContentView(binding.root)
 
 
@@ -102,6 +114,23 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun checkAnyPermission(permissionName: String) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                permissionName
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // 이미 권한이 허용된 경우
+        } else {
+            // 권한이 없는 경우 권한을 요청
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(permissionName),
+                1001
+            )
+        }
     }
 
     private fun applyTheme(onThemeApplied: () -> Unit) {
