@@ -2,7 +2,6 @@ package com.jinin4.journalog.calendar
 
 
 
-
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,6 +20,7 @@ import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.utils.CustomFontCalendarDecorator
 import com.jinin4.journalog.utils.FontUtils
+import com.jinin4.journalog.db.photo.PhotoDao
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -31,7 +31,6 @@ import net.developia.todolist.db.JournaLogDatabase
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Calendar
 
 //이상원 - 24.01.19, 반정현 - 24.01.22 수정
 
@@ -42,6 +41,8 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     private lateinit var memoList: List<MemoEntity>
     lateinit var db: JournaLogDatabase
     lateinit var memoDao: MemoDao
+    lateinit var photoDao: PhotoDao
+
     private var isWeek = true
 
     override fun onCreateView(
@@ -82,6 +83,8 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         memoDao = db.getMemoDao()
+        photoDao = db.getPhotoDao()
+
         calendarView.setOnDateChangedListener { widget, date, selected ->
             binding.tvSelectedDate.text = date.date.format(formatter_hangul) // 날짜 클릭 시 좌상단 날짜 변경
 //            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
@@ -140,20 +143,32 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         return binding.root
     }
 
+    lateinit var MemoWithUrisList : List<MemoImageUri>
 
     private fun getMemos(date: CalendarDay) {
         Thread {
             val formatter_datetime = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
             memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
+
+            MemoWithUrisList = emptyList()
+            for (memoEntity in memoList) {
+                MemoWithUrisList = MemoWithUrisList + MemoImageUri(memoEntity, photoDao.getUrisByMemoId(memoEntity.memo_id!!))
+//                listMemoImageUri.add(MemoImageUri(memoEntity, photoDao.getPhotoByMemoId(memoEntity.memo_id!!)))
+            }
+
+
             setRecyclerView()
         }.start()
+    }
+
+    private fun getMemoImageUri() {
+
     }
 
     private fun setRecyclerView() {
         // 리사이클러뷰 설정
         requireActivity().runOnUiThread {
-            adapter = CalendarMemoRecyclerViewAdapter(memoList, true,binding.calendarView.selectedDate!!,this) // ❷ 어댑터 객체 할당
+            adapter = CalendarMemoRecyclerViewAdapter(MemoWithUrisList, false,binding.calendarView.selectedDate!!,this) // ❷ 어댑터 객체 할당
             binding.recyclerView.adapter = adapter // 리사이클러뷰 어댑터로 위에서 만든 어댑터 설정
             binding.recyclerView.layoutManager = LinearLayoutManager(binding.root.context) // 레이아웃 매니저 설정
         }
