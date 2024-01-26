@@ -2,29 +2,23 @@ package com.jinin4.journalog.photo
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.jinin4.journalog.R
 import com.jinin4.journalog.db.memo.MemoEntity
-import java.io.File
 import kotlin.math.abs
 
 class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo: MemoEntity) : DialogFragment() {
@@ -63,7 +57,7 @@ class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo:
         additionalTextView.text = memoInfo.content
 
         // 이지윤 - 24.01.26 공유하기 기능 추가
-        val btnShare = view.findViewById<Button>(R.id.btnShare)
+        val btnShare = view.findViewById<ImageButton>(R.id.btnShare)
         btnShare.setOnClickListener {
             Log.d("share imageUri",imageUri.toString())
 

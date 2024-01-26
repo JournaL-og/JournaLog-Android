@@ -7,6 +7,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jinin4.journalog.R
 import com.jinin4.journalog.calendar.bottom_sheet.ImageUpdatedCallback
 import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
@@ -45,6 +49,9 @@ class MultiImageAdapter(
         val imageUri: Uri = list[position]
         Glide.with(context)
             .load(imageUri)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .transform(MultiTransformation(CenterCrop(), RoundedCorners(20)))
             .into(holder.image)
 
         holder.btn_removeImage.setOnClickListener{

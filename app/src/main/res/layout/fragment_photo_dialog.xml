@@ -25,17 +25,12 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnShare"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@color/colorPrimary"
-        android:text="공유"
-        android:textColor="@color/green_sw"
-        android:textColorHighlight="#EC1010"
-        android:textColorHint="#979797"
-        android:textSize="14sp"
-        app:iconTint="#000000"
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/ic_share"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
