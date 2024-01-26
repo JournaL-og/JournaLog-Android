@@ -22,6 +22,9 @@ interface PhotoDao {
     @Insert
     fun insertPhoto(photo: PhotoEntity): Long
 
+    @Query("SELECT photo_url FROM Photo WHERE memo_id = :memoId")
+    fun getPhotoUrlsByMemoId(memoId: Int): List<String>
+
     @Delete
     fun deletePhoto(photo: PhotoEntity)
 
