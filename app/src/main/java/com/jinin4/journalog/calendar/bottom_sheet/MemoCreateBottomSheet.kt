@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
@@ -59,9 +60,13 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import net.developia.todolist.db.JournaLogDatabase
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 // 이상원 - 24.01.22
@@ -88,6 +93,9 @@ class MemoCreateBottomSheet(
     var insertedColorId: Int = 1
     private val CAMERA_PERMISSION_REQUEST_CODE = 1001
     private val uriList = ArrayList<Uri>()
+
+    // 이지윤 24.01.26// 카메라로 사진을 찍을 때 사용할 파일 URI를 저장할 전역 변수
+    private var currentPhotoUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -455,8 +463,19 @@ class MemoCreateBottomSheet(
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+
+            // 이지윤,카메라로 찍은 사진 처리 로직 수정 - 24.01.26
+            val photoFile: File = createImageFile() // 이미지 파일을 생성하는 메소드 필요
+            currentPhotoUri = FileProvider.getUriForFile(
+                requireContext(),
+                "com.jinin4.journalog.fileprovider",
+                photoFile
+            )
+
             // 이미 권한이 허용된 경우
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+                putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri) // 풀 해상도 이미지를 저장할 Uri 전달
+            }
             someActivityResultLauncher.launch(intent)
         } else {
             // 권한이 없는 경우 권한을 요청
@@ -467,6 +486,25 @@ class MemoCreateBottomSheet(
             )
         }
     }
+
+    // 이지윤,카메라로 찍은 사진 처리 로직 수정 - 24.01.26
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // 이미지 파일 이름 생성 (예: JPEG_20230101_120000_)
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val imageFileName = "JPEG_${timeStamp}_"
+
+        // 앱의 사진 저장 디렉토리를 가져옴
+        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+
+        // 빈 파일 생성
+        return File.createTempFile(
+            imageFileName, /* 접두사 */
+            ".jpg", /* 접미사 */
+            storageDir /* 디렉토리 */
+        )
+    }
+
 
     private fun handleImageSelection(data: Intent?) {
 
@@ -493,11 +531,9 @@ class MemoCreateBottomSheet(
      * 카메라에서 찍은 사진을 처리하는 로직
      */
     private fun handleCameraImage(result: ActivityResult) {
-        val data: Intent? = result.data
-        val takenImage: Bitmap? = data?.extras?.get("data") as? Bitmap
-        if (takenImage != null) {
-            val imageUri = getImageUriFromBitmap(takenImage)
-            uriList.add(imageUri)
+        // 이지윤,카메라로 찍은 사진 처리 로직 수정 - 24.01.26
+        currentPhotoUri?.let { uri ->
+            uriList.add(uri)
             updateAdapter()
         }
     }
@@ -540,6 +576,7 @@ class MemoCreateBottomSheet(
 
 
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
