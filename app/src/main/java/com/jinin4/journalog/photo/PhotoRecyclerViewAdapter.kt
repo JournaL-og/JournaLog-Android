@@ -2,11 +2,9 @@ package com.jinin4.journalog.photo
 
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,9 +33,8 @@ class PhotoRecyclerViewAdapter(private val context: Context, private val photoLi
             imagePhoto.setOnClickListener {
                 val position = bindingAdapterPosition // 현재 뷰 홀더의 위치 가져오기
                 if (position != RecyclerView.NO_POSITION) {
-                    val imageUri = photoList[position].photo_uri.toUri()
-                    val memoInfo = memoList[position]
-                    val dialogFragment = CustomPhotoDialogFragment(imageUri,memoInfo)
+                    // 이지윤 이미지 슬라이더 구현 - 24.01.26
+                    val dialogFragment = CustomPhotoDialogFragment(photoList,memoList, position)
                     dialogFragment.show(fragmentManager, "customDialog")
 
                 }
