@@ -502,11 +502,13 @@ class MemoCreateBottomSheet(
         }
     }
 
+//    content://com.jinin4.journalog.fileprovider/camera_images/camera_image.jpg
+
     /**
      * 이미지를 얻어 Uri로 변환
      */
     private fun getImageUriFromBitmap(bitmap: Bitmap): Uri {
-        val imageFile = File(requireContext().cacheDir, "camera_image.jpg")
+        val imageFile = File(requireContext().cacheDir, "camera_image_${System.currentTimeMillis()}.jpg")
         imageFile.createNewFile()
 
         val outputStream = FileOutputStream(imageFile)
@@ -528,7 +530,7 @@ class MemoCreateBottomSheet(
         val recyclerView = binding.rvImageSlide
         imageAdapter = MultiImageAdapter(uriList, binding.root.context, this)
         recyclerView.adapter = imageAdapter
-//        recyclerView.layoutManager = GridLayoutManager(binding.root.context)
+//        recyclerView.layoutManager = GridLayoutManager(binding.root.context,2)
         recyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
     }
 

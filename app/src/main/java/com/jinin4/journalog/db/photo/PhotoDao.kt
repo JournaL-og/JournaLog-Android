@@ -16,6 +16,9 @@ interface PhotoDao {
     @Query("select photo_id,memo_id,photo_url,photo_uri from photo where memo_id = :memo_id")
     fun getPhotoByMemoId(memo_id: Int): List<PhotoEntity>
 
+    @Query("select photo_uri from photo where memo_id = :memo_id")
+    fun getUrisByMemoId(memo_id: Int): List<String>
+
     @Query("SELECT photo_id FROM photo WHERE memo_id = :memoId AND photo_uri = :uri LIMIT 1")
     fun getPhotoIdByMemoIdAndUri(memoId: Int, uri: String): Int?
 
