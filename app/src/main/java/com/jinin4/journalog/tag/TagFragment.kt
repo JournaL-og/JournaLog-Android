@@ -4,41 +4,45 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.databinding.FragmentTagBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
+import com.jinin4.journalog.db.photo.PhotoDao
+import com.jinin4.journalog.db.photo.PhotoEntity
+import com.jinin4.journalog.utils.BaseFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 //이상원 - 24.01.19
 //최성혁 - 수정 24.01.22
 class TagFragment : BaseFragment() {
 
-    lateinit var db: JournaLogDatabase
     private lateinit var binding: FragmentTagBinding
-    private lateinit var adapter: TagMemoRecyclerViewAdapter
-    lateinit var memoList: ArrayList<MemoEntity>
-    lateinit var memoDao: MemoDao
+    private lateinit var db: JournaLogDatabase
+    private lateinit var photoDao: PhotoDao
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTagBinding.inflate(inflater, container, false)
         db = JournaLogDatabase.getInstance(binding.root.context)!!
-        memoDao = db.getMemoDao()
+        photoDao = db.getPhotoDao()
 
-//        binding.btnCallDb.setOnClickListener {
-//            insertMemo()
-//        }
-        // default 전체 데이터
         getAllMemoList()
+        setupButtonListeners()
+
+        return binding.root
+    }
+
+    private fun setupButtonListeners() {
         binding.entireBtn.setOnClickListener { getAllMemoList() }
 
         // getMemoByColorId
@@ -49,36 +53,43 @@ class TagFragment : BaseFragment() {
         binding.blueBtn.setOnClickListener { filterMemosByColorId(5) }
         binding.indigoBtn.setOnClickListener { filterMemosByColorId(6) }
         binding.puppleBtn.setOnClickListener { filterMemosByColorId(7) }
-
-        return binding.root
     }
 
     private fun getAllMemoList() {
         CoroutineScope(Dispatchers.IO).launch {
-            val memos = memoDao.getAllMemo()
+            val memos = db.getMemoDao().getAllMemo()
+            val imageMap = getImageMap(memos)
             withContext(Dispatchers.Main) {
-                setRecyclerView(memos)
+                setRecyclerView(memos, imageMap)
             }
         }
     }
 
     private fun filterMemosByColorId(colorId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val filteredMemos = memoDao.getMemosByColorId(colorId)
+            val filteredMemos = db.getMemoDao().getMemosByColorId(colorId)
+            val imageMap = getImageMap(filteredMemos)
             withContext(Dispatchers.Main) {
-                setRecyclerView(filteredMemos)
+                setRecyclerView(filteredMemos, imageMap)
             }
         }
     }
 
-    private fun setRecyclerView(memoList: List<MemoEntity>){
+    private fun setRecyclerView(memoList: List<MemoEntity>, imageMap: Map<Int, List<PhotoEntity>>) {
         requireActivity().runOnUiThread {
-            adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList))
+            val adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList), imageMap)
             binding.tagRecyclerView.adapter = adapter
             binding.tagRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
         }
+    }
 
-
+    private suspend fun getImageMap(memos: List<MemoEntity>): Map<Int, List<PhotoEntity>> {
+        return memos.mapNotNull { memo ->
+            memo.memo_id?.let { id ->
+                val photos = photoDao.getPhotoByMemoId(id)
+                id to photos
+            }
+        }.toMap()
     }
 
 
