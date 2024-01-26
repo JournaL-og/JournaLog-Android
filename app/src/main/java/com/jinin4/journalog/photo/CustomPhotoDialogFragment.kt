@@ -2,30 +2,26 @@ package com.jinin4.journalog.photo
 
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.Glide
+import androidx.viewpager2.widget.ViewPager2
 import com.jinin4.journalog.R
 import com.jinin4.journalog.db.memo.MemoEntity
-import kotlin.math.abs
+import com.jinin4.journalog.db.photo.PhotoEntity
 
-class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo: MemoEntity) : DialogFragment() {
 
-    private var touchStartY = 0f
-    private var touchCurrentY = 0f
-    private val minDragDistance = 350f // 최소 드래그 거리 (픽셀 단위)
-    private val maxDragDistance = 700f // 최대 드래그 거리 (픽셀 단위)
+// 이지윤 작성 - 24.01.26
+class CustomPhotoDialogFragment(private val photoList: MutableList<PhotoEntity>, private val memoList:  MutableList<MemoEntity>, private val position: Int) : DialogFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -39,46 +35,45 @@ class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo:
         val constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraintLayout)
         constraintLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight)
 
-        Log.d("Firebase dialog url", imageUri.toString())
+        // 날짜 텍스트
+        val dateTextView = view.findViewById<TextView>(R.id.tvDate)
+        dateTextView.text = memoList[position].timestamp
+        // 추가 텍스트
+        val additionalTextView = view.findViewById<TextView>(R.id.tvAdditionalText)
+        additionalTextView.text = memoList[position].content
         // 이미지 뷰 설정
-        val imageView = view.findViewById<ImageView>(R.id.ivCustomImage)
-        Glide.with(this).load(imageUri).into(imageView)
+        val viewPager: ViewPager2 = view.findViewById(R.id.viewPager)
+        viewPager.adapter = ImageSliderAdapter(requireContext(), photoList)
+
+        // 필요한 경우, 현재 선택된 이미지 위치로 초기 스크롤
+        viewPager.setCurrentItem(position, false)
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                // 날짜와 텍스트 업데이트
+                dateTextView.text = memoList[position].timestamp
+                additionalTextView.text = memoList[position].content
+            }
+        })
 
         val closeButton = view.findViewById<ImageButton>(R.id.btnClose)
         closeButton.setOnClickListener { dismiss() }
 
-        // 날짜 텍스트 설정
-        val dateTextView = view.findViewById<TextView>(R.id.tvDate)
-        dateTextView.text = memoInfo.timestamp
+        // 이지윤 - 24.01.26 공유하기 기능 추가
+        val btnShare = view.findViewById<ImageButton>(R.id.btnShare)
+        btnShare.setOnClickListener {
+            val currentPosition = viewPager.currentItem
+            val currentImageUri = photoList[currentPosition].photo_uri.toUri()
 
-        // 추가 텍스트 설정
-        val additionalTextView = view.findViewById<TextView>(R.id.tvAdditionalText)
-        additionalTextView.text = memoInfo.content
+            Log.d("share currentImageUri",currentImageUri.toString())
 
-        imageView.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    touchStartY = event.rawY
-                    true
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    touchCurrentY = event.rawY
-                    val deltaY = touchCurrentY - touchStartY
-                    val translationY = v.translationY + deltaY
-                    v.translationY = translationY.coerceIn(-maxDragDistance, maxDragDistance)
-                    touchStartY = touchCurrentY
-                    true
-                }
-                MotionEvent.ACTION_UP -> {
-                    if (abs(v.translationY) > minDragDistance) {
-                        dismiss() // 드래그 거리가 임계값을 초과하면 다이얼로그 닫기
-                    } else {
-                        resetDialogPosition(imageView) // 이미지 뷰를 원래 위치로 되돌림
-                    }
-                    true
-                }
-                else -> false
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_STREAM, currentImageUri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
+            startActivity(Intent.createChooser(shareIntent, "Share Image"))
         }
 
         return view
@@ -102,10 +97,6 @@ class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo:
         }
     }
 
-    private fun resetDialogPosition(imageView: ImageView) {
-        imageView.translationY = 0f // 이미지 뷰를 원래 위치로 되돌림
-    }
-
     private fun getStatusBarHeight(): Int {
         var result = 0
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -119,5 +110,4 @@ class CustomPhotoDialogFragment(private val imageUri: Uri, private val memoInfo:
         val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
     }
-
 }
