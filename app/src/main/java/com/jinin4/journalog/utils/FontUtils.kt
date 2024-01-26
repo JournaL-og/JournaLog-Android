@@ -27,8 +27,8 @@ object FontUtils {
     suspend fun getFontSize(context: Context): Float {
         val fontSize = context.dataStore.data.first().fontSize ?: 16
         return when {
-            fontSize <= 40 -> 10.toFloat()
-            else -> fontSize/4.toFloat()
+            fontSize == 0 -> 17.toFloat()
+            else -> fontSize.toFloat()
         }
     }
 
@@ -40,8 +40,13 @@ object FontUtils {
                 }
             }
             is TextView -> {
-                view.typeface = typeface
-                view.textSize = fontSize
+                if (view.tag == "exclude") {
+                    view.typeface = typeface
+                    view.textSize = 17.toFloat()
+                } else {
+                    view.typeface = typeface
+                    view.textSize = fontSize
+                }
             }
 
         }

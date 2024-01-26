@@ -18,7 +18,8 @@
         android:text="10:52"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:tag="exclude"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_content_images"

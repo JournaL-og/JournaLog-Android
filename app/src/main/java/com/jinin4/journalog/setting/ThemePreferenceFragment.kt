@@ -1,11 +1,16 @@
 package com.jinin4.journalog.setting
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.GridLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
@@ -13,34 +18,56 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jinin4.journalog.Preference
 import com.jinin4.journalog.R
+import com.jinin4.journalog.databinding.FragmentThemePreferenceBinding
+import com.jinin4.journalog.utils.FontUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 // 반정현 - 24.01.23
 @AndroidEntryPoint
-class ThemePreferenceFragment : PreferenceFragmentCompat() {
+class ThemePreferenceFragment : Fragment() {
     private val viewModel: ThemeViewModel by viewModels()
+    private lateinit var binding : FragmentThemePreferenceBinding
+    private lateinit var themeContainer: GridLayout
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.theme_preference, rootKey)
-        val themePreference = findPreference<ListPreference>("Theme")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        hideBottomNavigation(true)
+        binding = FragmentThemePreferenceBinding.inflate(inflater, container, false)
+        val view=binding.root
+        themeContainer=binding.themeContainer
+        val themeValues = resources.getStringArray(R.array.theme_values)
+        val themeEntries= resources.getStringArray(R.array.theme_entries)
+        for (themeValue in themeValues) {
+            val button = Button(requireContext())
+            button.text = themeEntries[themeValue.toString().toInt()]
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            val params = GridLayout.LayoutParams()
+            params.width = GridLayout.LayoutParams.WRAP_CONTENT
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT
+            params.setMargins(5, 8, 5, 8)
+            button.layoutParams = params
 
-        themePreference?.onPreferenceChangeListener =
-            androidx.preference.Preference.OnPreferenceChangeListener { preference, newValue ->
-                val selectedTheme = Preference.Theme.forNumber(newValue.toString().toInt())
+            button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_border_button)
+            button.setPadding(16, 0, 16, 0)
+
+            button.setOnClickListener {
+                val selectedTheme = Preference.Theme.forNumber(themeValue.toString().toInt())
                 lifecycleScope.launch {
                     viewModel.changeTheme(selectedTheme)
-                    val newFragment=ThemePreviewFragment()
+                    val newFragment = ThemePreviewFragment()
                     activity?.supportFragmentManager?.beginTransaction()
                         ?.replace(R.id.container_preview, newFragment)
                         ?.commit()
                 }
-                true
             }
+
+            themeContainer.addView(button)
+        }
+        return view
     }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        hideBottomNavigation(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,20 +80,11 @@ class ThemePreferenceFragment : PreferenceFragmentCompat() {
 
         // Preview container를 보이게 합니다.
         activity?.findViewById<FrameLayout>(R.id.container_preview)?.visibility = View.VISIBLE
-
-        // RecyclerView에 위쪽 패딩 추가
-        val recyclerView = listView
-
-        // 화면의 높이를 가져옵니다.
-        val metrics = resources.displayMetrics
-        val screenHeight = metrics.heightPixels
-
-        // 화면 높이의 80%를 계산합니다.
-        val halfScreenHeight = (screenHeight * 0.8).toInt()
-        recyclerView.setPadding(0, halfScreenHeight, 0, 0)
-        recyclerView.clipToPadding = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            val typeface = FontUtils.getFontType(requireContext())
+            FontUtils.applyFont(view, typeface, 14f)
+        }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

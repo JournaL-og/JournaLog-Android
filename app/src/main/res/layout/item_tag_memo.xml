@@ -59,7 +59,8 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/tagview_memo_content"
         app:layout_constraintTop_toBottomOf="@id/imageRecyclerView"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:tag="exclude"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

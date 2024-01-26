@@ -9,4 +9,11 @@
     <string name="close">닫기</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="calenderview">캘린더 화면 설정</string>
+    <string name="weekstart">한 주의 시작을</string>
+    <string name="timeorder">시간순</string>
+    <string name="timedisplay">시간 보기</string>
+    <string name="calendardisplay">캘린더 보기</string>
+    <string name="normalsetting">일반 설정</string>
+    <string name="language">언어</string>
 </resources>
