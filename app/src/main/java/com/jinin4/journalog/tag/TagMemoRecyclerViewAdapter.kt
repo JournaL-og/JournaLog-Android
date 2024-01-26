@@ -3,8 +3,6 @@ package com.jinin4.journalog.tag
 import TagMemoImagesRecyclerViewAdapter
 import android.content.Context
 import android.graphics.drawable.LayerDrawable
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,20 +18,23 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jinin4.journalog.MemoRightColorSetting
 import com.jinin4.journalog.R
-import com.jinin4.journalog.calendar.CalendarMemoRecyclerViewAdapter
-import com.jinin4.journalog.databinding.FragmentTagBinding
+import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
 import com.jinin4.journalog.databinding.ItemTagMemoBinding
-import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.db.photo.PhotoEntity
 import com.jinin4.journalog.utils.FontUtils
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 //최성혁 - 24.01.22
-class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>, private val photos: Map<Int, List<PhotoEntity>>) :
+class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
+                                 private val photos: Map<Int, List<PhotoEntity>>,
+                                 private val tag:TagFragment) :
     RecyclerView.Adapter<TagMemoRecyclerViewAdapter.TagMemoViewHolder>() {
 
     inner class TagMemoViewHolder(binding: ItemTagMemoBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -103,9 +105,6 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>, pr
         holder.memoDate_RecycleView.text = memo.timestamp
         holder.memoDate_Container.text = memo.timestamp
 
-        // 모든 photo_url
-        val photoUrls = photos[memo.memo_id ?: 0] ?: emptyList()
-
 
         // 사진이 2개 이하일 경우 사진을 LinearLayout에 추가
         if (photoUris.size == 1) {
@@ -129,8 +128,6 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>, pr
                         it.setMargins(marginSize,0,marginSize,0)
                     }
                     // 이미지 로드
-//                    val encodedPhotoUrl = Uri.encode(photoUrl)
-//                    val imageUrl = "https://firebasestorage.googleapis.com/v0/b/journalog-b5800.appspot.com/o/$encodedPhotoUrl?alt=media"
                     Glide.with(holder.itemView.context)
                         .load(photoUrl)
                         .transform(CenterCrop(), RoundedCorners(20)) // 둥근 모서리
@@ -160,9 +157,6 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>, pr
                     }
                     scaleType = ImageView.ScaleType.CENTER_CROP
 
-                    // 이미지 로드
-//                    val encodedPhotoUrl = Uri.encode(photoUrl)
-//                    val imageUrl = "https://firebasestorage.googleapis.com/v0/b/journalog-b5800.appspot.com/o/$encodedPhotoUrl?alt=media"
                     Glide.with(holder.itemView.context)
                         .load(photoUrl)
                         .transform(CenterCrop(), RoundedCorners(20))
@@ -171,9 +165,7 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>, pr
                 // 이미지 뷰를 LinearLayout에 추가
                 holder.imageContainer.addView(imageView)
             }
-
-        }else
-        {
+        }else {
             // 사진이 세 장 이상일 때
             holder.imageRecyclerView.visibility = View.VISIBLE
             holder.imageContainer.visibility = View.GONE
@@ -181,16 +173,44 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>, pr
             holder.memoDate_RecycleView.visibility = View.VISIBLE
             holder.memoDate_Container.visibility = View.GONE
 
-
             val imageAdapter = TagMemoImagesRecyclerViewAdapter(photoUris)
             holder.imageRecyclerView.adapter = imageAdapter
             holder.imageRecyclerView.layoutManager =
                 LinearLayoutManager(holder.itemView.context, LinearLayoutManager.HORIZONTAL, false)
         }
+        holder.cltag_.setOnClickListener({showMemoEditDialog(holder,memo)})
     }
 
     private fun dpToPx(dp: Int, context: Context): Int {
         return (dp * context.resources.displayMetrics.density).toInt()
+    }
+
+    fun showMemoEditDialog(holder: TagMemoViewHolder, memoEntity: MemoEntity) {
+
+        val memoTimeSplit = memoEntity.timestamp.split(" ")  //날짜 부분 시간 부분 분할
+        // 날짜 부분
+        val datePart = memoTimeSplit[0]
+
+        // 시간 부분
+        val timePartRaw = memoTimeSplit[1]
+        val timeParts = timePartRaw.split(":")
+        val timePart = "${timeParts[0]}시 ${timeParts[1]}분"
+
+        val memo2 = MemoEntity(memoEntity.memo_id,memoEntity.content,timePart,memoEntity.color_id)
+        val modal = MemoCreateBottomSheet(toCalendarDay(datePart)!!, tag, memo2)
+        modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
+        modal.setTargetFragment(tag, 1)
+        modal.show(
+            tag.requireActivity().supportFragmentManager,
+            MemoCreateBottomSheet.TAG
+        )
+    }
+
+    fun toCalendarDay(dateString: String?): CalendarDay? {
+        return dateString?.let {
+            val localDate = LocalDate.parse(it, DateTimeFormatter.ISO_DATE)
+            CalendarDay.from(localDate)
+        }
     }
 
 }

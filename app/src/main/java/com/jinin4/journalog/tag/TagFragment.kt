@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jinin4.journalog.calendar.MemoInsertCallback
 import com.jinin4.journalog.databinding.FragmentTagBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
@@ -25,7 +26,7 @@ import java.time.format.DateTimeFormatter
 
 //이상원 - 24.01.19
 //최성혁 - 수정 24.01.22
-class TagFragment : BaseFragment() {
+class TagFragment : BaseFragment(),MemoInsertCallback {
 
     private lateinit var binding: FragmentTagBinding
     private lateinit var db: JournaLogDatabase
@@ -40,6 +41,10 @@ class TagFragment : BaseFragment() {
         setupButtonListeners()
 
         return binding.root
+    }
+
+    override fun onMemoInserted() {
+        getAllMemoList()
     }
 
     private fun setupButtonListeners() {
@@ -76,14 +81,16 @@ class TagFragment : BaseFragment() {
     }
 
     private fun setRecyclerView(memoList: List<MemoEntity>, imageMap: Map<Int, List<PhotoEntity>>) {
+        // setRecyclerView: 리사이클러뷰의 어댑터와 레이아웃 매니저를 설정하고 데이터를 바인딩합니다.
         requireActivity().runOnUiThread {
-            val adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList), imageMap)
+            val adapter = TagMemoRecyclerViewAdapter(ArrayList(memoList), imageMap, this)
             binding.tagRecyclerView.adapter = adapter
             binding.tagRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
         }
     }
 
     private suspend fun getImageMap(memos: List<MemoEntity>): Map<Int, List<PhotoEntity>> {
+        // 메모 리스트를 바탕으로 각 메모 ID에 해당하는 사진 리스트의 맵을 생성
         return memos.mapNotNull { memo ->
             memo.memo_id?.let { id ->
                 val photos = photoDao.getPhotoByMemoId(id)
