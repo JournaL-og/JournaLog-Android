@@ -25,6 +25,20 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
+    <Button
+        android:id="@+id/btnShare"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:text="공유"
+        android:textColor="@color/green_sw"
+        android:textColorHighlight="#EC1010"
+        android:textColorHint="#979797"
+        android:textSize="14sp"
+        app:iconTint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvAdditionalText"
         android:layout_width="match_parent"
