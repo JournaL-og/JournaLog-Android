@@ -19,6 +19,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
+import android.util.Log
 import com.bumptech.glide.request.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
@@ -109,8 +110,6 @@ class MemoCreateBottomSheet(
         memoDao = db.getMemoDao()
         memoPhotoDao = db.getMemoPhotoDao()
         photoDao = db.getPhotoDao()
-
-
 
 
         val formatterMonthDay = org.threeten.bp.format.DateTimeFormatter.ofPattern("MM월 dd일")
