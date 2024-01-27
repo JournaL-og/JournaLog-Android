@@ -97,9 +97,9 @@ class SettingFragment : Fragment() {
     private fun showPasswordSetupDialog() {
         val passwordSetupDialog = PasswordSetupDialogFragment { newPassword ->
             lifecycleScope.launch {
-                if (isFirstPasswordAttempt(newPassword)) {
+                if (isValidPassword(newPassword) && isFirstPasswordAttempt(newPassword)) {
                     // 첫 번째 시도에서는 타이틀만 변경
-                    showToast("비밀번호를 한 번 더 입력해주세요")
+                    showToast("비밀번호를 확인해주세요")
                 } else {
                     // 두 번째 시도에서는 실제 비밀번호 확인
                     if (isValidPassword(newPassword)) {
@@ -130,9 +130,6 @@ class SettingFragment : Fragment() {
                     // 비밀번호가 맞으면 비밀번호 해제 메시지 표시하고 비밀번호 초기화
                     showToast("비밀번호가 비활성되었습니다")
                     clearPasswordInDataStore()
-                } else {
-                    // 비밀번호가 틀리면 검증 실패 메시지 표시
-                    showToast("비밀번호를 확인해주세요")
                 }
             }
         }

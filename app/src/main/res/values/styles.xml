@@ -3,7 +3,7 @@
     <!--  반정현 작성 - 24.01.24-->
     <style name="LIGHT_THEME_1" parent="Theme.Material3.DayNight.NoActionBar">
         <!--        상단 갤럭시 상태바 색상 설정-->
-        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimary">@color/moon</item>
         <item name="colorPrimaryDark">@color/grey</item>
         <item name="colorAccent">@color/moon</item>
         <!--        전체적인 배경색 설정-->
@@ -19,7 +19,7 @@
 
     <style name="LIGHT_THEME_2" parent="Theme.Material3.DayNight.NoActionBar">
         <!--        상단 갤럭시 상태바 색상 설정-->
-        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimary">@color/sky</item>
         <item name="colorPrimaryDark">@color/grey</item>
         <item name="colorAccent">@color/sky</item>
         <!--        전체적인 배경색 설정-->
@@ -35,7 +35,7 @@
 
     <style name="LIGHT_THEME_3" parent="Theme.Material3.DayNight.NoActionBar">
         <!--        상단 갤럭시 상태바 색상 설정-->
-        <item name="colorPrimary">@color/baby</item>
+        <item name="colorPrimary">@color/pink</item>
         <item name="colorPrimaryDark">@color/lightpink</item>
         <item name="colorAccent">@color/pink</item>
         <!--        전체적인 배경색 설정-->

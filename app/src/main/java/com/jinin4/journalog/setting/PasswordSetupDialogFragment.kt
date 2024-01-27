@@ -37,8 +37,6 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
         val view: View = inflater.inflate(R.layout.dialog_password_setup, null)
 
         editTextPassword = view.findViewById(R.id.editTextPassword)
-        val buttonCancel: Button = view.findViewById(R.id.buttonCancel)
-        val buttonConfirm: Button = view.findViewById(R.id.buttonConfirm)
 
         // 동적으로 제목을 설정
         customTitle?.let {
@@ -46,19 +44,24 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
         }
 
         builder.setView(view)
+            .setNegativeButton("취소", null) // 클릭 이벤트를 null로 설정
+            .setPositiveButton("확인", null)  // 클릭 이벤트를 null로 설정
 
         val dialog = builder.create()
 
-        buttonCancel.setOnClickListener {
-            lifecycleScope.launch {
-                clearPasswordInDataStore()
-                dialog.dismiss()
+        dialog.setOnShowListener {
+            val negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE)
+            negativeButton.setOnClickListener {
+                lifecycleScope.launch {
+                    clearPasswordInDataStore()
+                    dialog.dismiss()
+                }
             }
-        }
 
-
-        buttonConfirm.setOnClickListener {
-            handleConfirmButtonClick(dialog)
+            val positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
+                handleConfirmButtonClick(dialog)
+            }
         }
 
         return dialog
