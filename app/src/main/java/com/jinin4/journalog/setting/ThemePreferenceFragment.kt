@@ -22,7 +22,7 @@ import com.jinin4.journalog.databinding.FragmentThemePreferenceBinding
 import com.jinin4.journalog.utils.FontUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-// 반정현 - 24.01.23
+// 반정현 수정 - 24.01.26
 @AndroidEntryPoint
 class ThemePreferenceFragment : Fragment() {
     private val viewModel: ThemeViewModel by viewModels()

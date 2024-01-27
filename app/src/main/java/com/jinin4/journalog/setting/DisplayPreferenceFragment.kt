@@ -19,6 +19,7 @@ import com.jinin4.journalog.utils.FontUtils
 import kotlinx.coroutines.launch
 
 //반정현 - 24.01.22
+//반정현 수정 - 24.01.26
 class DisplayPreferenceFragment : Fragment() {
     private lateinit var binding: FragmentDisplayPreferenceBinding
     override fun onCreateView(
