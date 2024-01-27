@@ -126,6 +126,7 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
                 val imageView = ImageView(holder.itemView.context).apply {
                     layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, pixelSize).also {
                         it.setMargins(marginSize,0,marginSize,0)
+                        it.marginEnd = marginSize * 2 // 오른쪽 마진을 늘려서 왼쪽으로 이동효과를 줌
                     }
                     // 이미지 로드
                     Glide.with(holder.itemView.context)
@@ -154,6 +155,7 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
                 val imageView = ImageView(holder.itemView.context).apply {
                     layoutParams = LinearLayout.LayoutParams(imageWidth, imageRealHeight,1f).also {
                         it.setMargins(marginSize, 0, marginSize, 0)
+                        it.marginEnd = marginSize * 2
                     }
                     scaleType = ImageView.ScaleType.CENTER_CROP
 
