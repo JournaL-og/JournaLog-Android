@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.jinin4.journalog.R
 import com.jinin4.journalog.dataStore
+import com.jinin4.journalog.databinding.DialogPasswordSetupBinding
 import com.jinin4.journalog.utils.PasswordUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -21,9 +22,8 @@ import kotlinx.coroutines.withContext
 
 
 class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Unit) : DialogFragment() {
-
+    private lateinit var binding:DialogPasswordSetupBinding
     private var customTitle: String? = null
-    private lateinit var editTextPassword: EditText
     private var isFirstAttempt = true
 
     fun setTitle(title: String) {
@@ -33,18 +33,15 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
 
-        // 커스텀 레이아웃을 이용하여 다이얼로그 생성
-        val inflater: LayoutInflater = requireActivity().layoutInflater
-        val view: View = inflater.inflate(R.layout.dialog_password_setup, null)
+        binding = DialogPasswordSetupBinding.inflate(LayoutInflater.from(context))
 
-        editTextPassword = view.findViewById(R.id.editTextPassword)
 
         // 동적으로 제목을 설정
         customTitle?.let {
             builder.setTitle(it)
         }
 
-        builder.setView(view)
+        builder.setView(binding.root)
             .setNegativeButton("취소", null) // 클릭 이벤트를 null로 설정
             .setPositiveButton("확인", null)  // 클릭 이벤트를 null로 설정
 
@@ -69,7 +66,7 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
     }
 
     private fun handleConfirmButtonClick(dialog: Dialog) {
-        val password = editTextPassword.text.toString()
+        val password = binding.editTextPassword.text.toString()
 
         lifecycleScope.launch {
             if (isFirstAttempt) {
@@ -83,7 +80,7 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
     private suspend fun handleFirstAttempt(password: String, dialog: Dialog) {
         // 첫 번째 시도에서는 타이틀만 변경
         savePasswordToDataStore(password)
-        editTextPassword.text.clear()
+        binding.editTextPassword.text.clear()
         dialog.setTitle("비밀번호를 확인해주세요")
         isFirstAttempt = false
     }
@@ -96,7 +93,7 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
             dialog.dismiss()
         } else {
             PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
-            editTextPassword.text.clear()
+            binding.editTextPassword.text.clear()
         }
     }
 
