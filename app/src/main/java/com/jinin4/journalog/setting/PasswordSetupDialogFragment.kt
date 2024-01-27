@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+//반정현 작성 - 24.01.27
 class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Unit) : DialogFragment() {
     private lateinit var binding:DialogPasswordSetupBinding
     private var customTitle: String? = null

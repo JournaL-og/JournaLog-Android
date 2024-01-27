@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: ThemeViewModel by viewModels()
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding:ActivityMainBinding
     private lateinit var toolbar: Toolbar
     private var isWeek = true
     override fun onCreate(savedInstanceState: Bundle?) {

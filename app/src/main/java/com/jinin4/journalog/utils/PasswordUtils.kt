@@ -6,7 +6,7 @@ import com.jinin4.journalog.dataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-
+//반정현 작성 - 24.01.27
 object PasswordUtils {
     suspend fun getPasswordFromDataStore(context: Context): String {
         return withContext(Dispatchers.IO) {
