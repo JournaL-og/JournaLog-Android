@@ -50,7 +50,7 @@ class FontPreferenceFragment : Fragment() {
             // 현재 폰트에 대한 Typeface 얻기
             val typeface = ResourcesCompat.getFont(requireContext(), resources.getIdentifier(fontType, "font", requireContext().packageName))
             button.setTypeface(typeface)
-            if (fontType == "nanumpen") button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            if (fontType == "nanumpen") button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
             else button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
 
             val params = GridLayout.LayoutParams()
