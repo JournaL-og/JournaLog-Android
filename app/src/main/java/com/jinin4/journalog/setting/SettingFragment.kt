@@ -1,20 +1,15 @@
 package com.jinin4.journalog.setting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import com.jinin4.journalog.R
-import com.jinin4.journalog.dataStore
 import com.jinin4.journalog.databinding.FragmentSettingBinding
 import com.jinin4.journalog.utils.FontUtils
-import kotlinx.coroutines.flow.first
+import com.jinin4.journalog.utils.PasswordUtils
 import kotlinx.coroutines.launch
 
 //이상원 - 24.01.19, 반정현 - 24.01.22 수정
@@ -48,20 +43,6 @@ class SettingFragment : Fragment() {
         }
     }
 
-//    private fun onPreferenceClick(view: View) {
-//        val fragment: Fragment = when (view.tag as String) {
-//            "display_category" -> DisplayPreferenceFragment()
-//            "font_category" -> FontPreferenceFragment()
-//            "theme_category" -> ThemePreferenceFragment()
-//            "privacy_category" -> DisplayPreferenceFragment()
-//            else -> throw IllegalArgumentException("Invalid tag")
-//        }
-//
-//        parentFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_container_view_tag, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
 
     private fun onPreferenceClick(view: View) {
         when (view.tag as String) {
@@ -82,7 +63,7 @@ class SettingFragment : Fragment() {
 
     private fun showPrivacyOptions() {
         lifecycleScope.launch {
-            val password = getPasswordFromDataStore()
+            val password = PasswordUtils.getPasswordFromDataStore(requireContext())
 
             if (password.isEmpty()) {
                 // 비밀번호가 설정되어 있지 않으면 비밀번호 설정 다이얼로그 표시
@@ -97,16 +78,16 @@ class SettingFragment : Fragment() {
     private fun showPasswordSetupDialog() {
         val passwordSetupDialog = PasswordSetupDialogFragment { newPassword ->
             lifecycleScope.launch {
-                if (isValidPassword(newPassword) && isFirstPasswordAttempt(newPassword)) {
-                    // 첫 번째 시도에서는 타이틀만 변경
-                    showToast("비밀번호를 확인해주세요")
+                if (PasswordUtils.isValidPassword(newPassword) && isFirstPasswordAttempt(newPassword)) {
+                    // 첫 번째 시도
+                    PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
                 } else {
-                    // 두 번째 시도에서는 실제 비밀번호 확인
-                    if (isValidPassword(newPassword)) {
-                        savePasswordToDataStore(newPassword)
-                        showToast("비밀번호가 설정되었습니다")
+                    // 두 번째 시도
+                    if (PasswordUtils.isValidPassword(newPassword)) {
+                        PasswordUtils.savePasswordToDataStore(requireContext(),newPassword)
+                        PasswordUtils.showToast(requireContext(),"비밀번호가 설정되었습니다")
                     } else {
-                        showToast("4자리 숫자로 비밀번호를 설정해주세요")
+                        PasswordUtils.showToast(requireContext(),"4자리 숫자로 비밀번호를 설정해주세요")
                     }
                 }
             }
@@ -120,7 +101,7 @@ class SettingFragment : Fragment() {
     }
 
     private fun isFirstPasswordAttempt(newPassword: String): Boolean {
-        return newPassword.isEmpty() || !isValidPassword(newPassword)
+        return newPassword.isEmpty() || !PasswordUtils.isValidPassword(newPassword)
     }
 
     private fun showPasswordVerificationDialog() {
@@ -128,37 +109,12 @@ class SettingFragment : Fragment() {
             lifecycleScope.launch {
                 if (isPasswordCorrect) {
                     // 비밀번호가 맞으면 비밀번호 해제 메시지 표시하고 비밀번호 초기화
-                    showToast("비밀번호가 비활성되었습니다")
-                    clearPasswordInDataStore()
+                    PasswordUtils.showToast(requireContext(),"비밀번호가 비활성되었습니다")
+                    PasswordUtils.clearPasswordInDataStore(requireContext())
                 }
             }
         }
         passwordVerificationDialog.show(parentFragmentManager, "PasswordVerificationDialog")
-    }
-
-    private suspend fun getPasswordFromDataStore(): String {
-        val preferences = context?.dataStore?.data?.first()
-        return preferences?.password ?: ""
-    }
-
-    private suspend fun savePasswordToDataStore(newPassword: String) {
-        context?.dataStore?.updateData { preferences ->
-            preferences.toBuilder().setPassword(newPassword).build()
-        }
-    }
-
-    private suspend fun clearPasswordInDataStore() {
-        context?.dataStore?.updateData { preferences ->
-            preferences.toBuilder().setPassword("").build()
-        }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun isValidPassword(password: String): Boolean {
-        return password.matches(Regex("\\d{4}"))
     }
 
 }

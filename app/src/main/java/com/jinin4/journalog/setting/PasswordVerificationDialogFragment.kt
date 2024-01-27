@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.jinin4.journalog.R
 import com.jinin4.journalog.dataStore
+import com.jinin4.journalog.utils.PasswordUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ class PasswordVerificationDialogFragment(private val onVerificationResult: (Bool
 
                 // 코루틴을 사용하여 비밀번호 확인
                 lifecycleScope.launch {
-                    val isPasswordCorrect = checkPassword(enteredPassword)
+                    val isPasswordCorrect = PasswordUtils.checkPassword(requireContext(),enteredPassword)
 
                     if (isPasswordCorrect) {
                         // 비밀번호가 맞으면 다이얼로그 닫고 결과 전달
@@ -62,7 +63,7 @@ class PasswordVerificationDialogFragment(private val onVerificationResult: (Bool
                     } else {
                         // 비밀번호가 틀리면 입력 필드 초기화
                         editTextPassword.text.clear()
-                        showToast("비밀번호를 확인해주세요")
+                        PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
                     }
                 }
             }
@@ -71,24 +72,4 @@ class PasswordVerificationDialogFragment(private val onVerificationResult: (Bool
         return dialog
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-
-    private suspend fun getPasswordFromDataStore(): String {
-        return withContext(Dispatchers.IO) {
-            val preferences = context?.dataStore?.data?.first()
-            preferences?.password ?: ""
-        }
-    }
-
-
-
-    private suspend fun checkPassword(enteredPassword: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            val storedPassword = getPasswordFromDataStore()
-            enteredPassword == storedPassword
-        }
-    }
 }

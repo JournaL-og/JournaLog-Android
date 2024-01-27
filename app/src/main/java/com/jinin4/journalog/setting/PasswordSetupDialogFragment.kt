@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.jinin4.journalog.R
 import com.jinin4.journalog.dataStore
+import com.jinin4.journalog.utils.PasswordUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
             val negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE)
             negativeButton.setOnClickListener {
                 lifecycleScope.launch {
-                    clearPasswordInDataStore()
+                    PasswordUtils.clearPasswordInDataStore(requireContext())
                     dialog.dismiss()
                 }
             }
@@ -89,12 +90,12 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
 
     private suspend fun handleSecondAttempt(password: String, dialog: Dialog) {
         // 두 번째 시도에서는 실제 비밀번호 확인
-        if (checkPassword(password)) {
+        if (PasswordUtils.checkPassword(requireContext(),password)) {
             savePasswordToDataStore(password)
-            showToast("비밀번호가 설정되었습니다")
+            PasswordUtils.showToast(requireContext(),"비밀번호가 설정되었습니다")
             dialog.dismiss()
         } else {
-            showToast("비밀번호를 확인해주세요")
+            PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
             editTextPassword.text.clear()
         }
     }
@@ -105,29 +106,4 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
         }
     }
 
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private suspend fun getPasswordFromDataStore(): String {
-        return withContext(Dispatchers.IO) {
-            val preferences = context?.dataStore?.data?.first()
-            preferences?.password ?: ""
-        }
-    }
-    private suspend fun clearPasswordInDataStore() {
-        context?.dataStore?.updateData { preferences ->
-            preferences.toBuilder().setPassword("").build()
-        }
-    }
-
-    private suspend fun checkPassword(enteredPassword: String): Boolean {
-        return withContext(Dispatchers.IO) {
-
-            val storedPassword = getPasswordFromDataStore()
-            Log.d("Password","${storedPassword}")
-            enteredPassword == storedPassword
-        }
-    }
 }
