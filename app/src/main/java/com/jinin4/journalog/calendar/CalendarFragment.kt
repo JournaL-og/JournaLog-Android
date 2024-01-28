@@ -68,6 +68,8 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
             }
         }
 
+
+
         val calendarView: MaterialCalendarView = binding.calendarView
         viewLifecycleOwner.lifecycleScope.launch {
             val typeface = FontUtils.getFontType(requireContext())
