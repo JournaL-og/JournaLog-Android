@@ -26,8 +26,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:background="@drawable/rounded_border"
-        android:padding="10dp"
-        android:paddingEnd="30dp"
+        android:paddingStart="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+
         android:text="메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek"
         app:layout_constraintStart_toEndOf="@+id/tv_timestamp"
         app:layout_constraintTop_toTopOf="parent"
