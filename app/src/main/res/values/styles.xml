@@ -49,6 +49,22 @@
         <item name="bottombackground">@color/baby</item>
     </style>
 
+    <style name="LIGHT_THEME_4" parent="Theme.Material3.DayNight.NoActionBar">
+        <!--        상단 갤럭시 상태바 색상 설정-->
+        <item name="colorPrimary">@color/peppergreen</item>
+        <item name="colorPrimaryDark">@color/peppermint</item>
+        <item name="colorAccent">@color/peppergreen</item>
+        <!--        전체적인 배경색 설정-->
+        <item name="android:colorBackground">@color/white</item>
+        <item name="memocolor">@color/white</item>
+        <item name="calendercolor">@color/pepper</item>
+        <item name="pickcolor">@color/peppergreen</item>
+        <item name="navigationpick">@color/peppergreen</item>
+        <item name="iconcolor">@color/black</item>
+        <item name="modalbackground">@color/peppermint</item>
+        <item name="bottombackground">@color/peppermint</item>
+    </style>
+
     <style name="Widget.Material3.BottomNavigationView.ActiveIndicator" parent="">
         <item name="android:width">@dimen/m3_bottom_nav_item_active_indicator_width</item>
         <item name="android:height">@dimen/m3_bottom_nav_item_active_indicator_height</item>
@@ -85,6 +101,7 @@
         <item name="android:singleLine">true</item>
     </style>
 
+
     <style name="PasscodeButtonStyle" parent="@android:style/Widget.Button">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FF464646</item>
@@ -93,6 +110,12 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:layout_width">120dp</item>
         <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="NoDisplay">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 </resources>

@@ -20,6 +20,7 @@ class AppLifecycleObserver(
         }
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onBackground() {
         //background

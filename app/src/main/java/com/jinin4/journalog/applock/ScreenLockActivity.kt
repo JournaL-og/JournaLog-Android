@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils
 import android.widget.EditText
 import com.jinin4.journalog.databinding.ActivityLockScreenBinding
 import com.jinin4.journalog.utils.PasswordUtils
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -130,6 +131,7 @@ class ScreenLockActivity : Activity(){
         GlobalScope.launch(Dispatchers.Main) {
             val isPasswordCorrect = PasswordUtils.checkPassword(context, enteredPassword)
             if (isPasswordCorrect) {
+                setResult(RESULT_OK);
                 finish()
             } else {
                 binding.tvMessage.text="비밀번호를 다시 입력해주세요"

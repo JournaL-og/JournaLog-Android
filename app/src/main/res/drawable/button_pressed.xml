@@ -4,8 +4,8 @@
 
     <stroke
         android:width="1dip"
-        android:color="?attr/pickcolor" />
+        android:color="@color/y_gray" />
 
-    <solid android:color="?attr/pickcolor" />
+    <solid android:color="@color/y_gray" />
 
 </shape>

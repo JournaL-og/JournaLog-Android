@@ -43,33 +43,6 @@ class ThemePreferenceFragment : Fragment() {
         binding = FragmentThemePreferenceBinding.inflate(inflater, container, false)
         val view=binding.root
         themeContainer=binding.themeContainer
-//        val themeValues = resources.getStringArray(R.array.theme_values)
-//        val themeEntries= resources.getStringArray(R.array.theme_entries)
-//        for (themeValue in themeValues) {
-//            val button = Button(requireContext())
-//            button.text = themeEntries[themeValue.toString().toInt()]
-//            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-//            val params = GridLayout.LayoutParams()
-//            params.width = GridLayout.LayoutParams.WRAP_CONTENT
-//            params.height = GridLayout.LayoutParams.WRAP_CONTENT
-//            params.setMargins(5, 8, 5, 8)
-//            button.layoutParams = params
-//
-//            button.setPadding(16, 0, 16, 0)
-//
-//            button.setOnClickListener {
-//                val selectedTheme = Preference.Theme.forNumber(themeValue.toString().toInt())
-//                lifecycleScope.launch {
-//                    viewModel.changeTheme(selectedTheme)
-//                    val newFragment = ThemePreviewFragment()
-//                    activity?.supportFragmentManager?.beginTransaction()
-//                        ?.replace(R.id.container_preview, newFragment)
-//                        ?.commit()
-//                }
-//            }
-//
-//            themeContainer.addView(button)
-//        }
         val themeValues = resources.getStringArray(R.array.theme_values)
         val themeEntries = resources.getStringArray(R.array.theme_entries)
         val vectorDrawables = arrayOf(
