@@ -47,6 +47,19 @@ class DisplayPreferenceFragment : Fragment() {
             }
         }
 
+        // DataStore에서 값을 읽어와서 Spinner의 선택된 항목을 설정
+        lifecycleScope.launch {
+            context?.dataStore?.data?.collect { preferences ->
+                val diarySortOrder = preferences.diarySortOrder
+                val position = when (diarySortOrder) {
+                    Preference.SortOrder.DESCENDING -> 0
+                    Preference.SortOrder.ASCENDING -> 1
+                    else -> 0
+                }
+                binding.diarySortOrder.setSelection(position)
+            }
+        }
+
         // 주 시작 일 설정
         binding.weekStartDay.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -61,6 +74,24 @@ class DisplayPreferenceFragment : Fragment() {
                 lifecycleScope.launch {
                     context?.dataStore?.updateData { preferences ->
                         preferences.toBuilder().setWeekStartDay(selectedDay).build()
+                    }
+                }
+            }
+        }
+
+        binding.diarySortOrder.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedSortOrder = when (position) {
+                    0 -> Preference.SortOrder.DESCENDING
+                    1 -> Preference.SortOrder.ASCENDING
+                    else -> Preference.SortOrder.DESCENDING
+                }
+
+                lifecycleScope.launch {
+                    context?.dataStore?.updateData { preferences ->
+                        preferences.toBuilder().setDiarySortOrder(selectedSortOrder).build()
                     }
                 }
             }

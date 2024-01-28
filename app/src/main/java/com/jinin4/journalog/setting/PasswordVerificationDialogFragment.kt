@@ -28,7 +28,7 @@ class PasswordVerificationDialogFragment(private val onVerificationResult: (Bool
             builder.setTitle(it)
         }
 
-        builder.setTitle("비밀번호를 확인해주세요")
+        builder.setTitle("비밀번호를 확인해주세요.")
 
         builder.setView(binding.root)
             .setNegativeButton("취소") { dialog, _ ->
@@ -54,7 +54,7 @@ class PasswordVerificationDialogFragment(private val onVerificationResult: (Bool
                     } else {
                         // 비밀번호가 틀리면 입력 필드 초기화
                         binding.editTextPassword.text.clear()
-                        PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
+                        PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요.")
                     }
                 }
             }

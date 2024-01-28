@@ -7,20 +7,15 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.ListPreference
-import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jinin4.journalog.Preference
 import com.jinin4.journalog.R
@@ -28,6 +23,7 @@ import com.jinin4.journalog.databinding.FragmentThemePreferenceBinding
 import com.jinin4.journalog.utils.FontUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 // 반정현 수정 - 24.01.26
 @AndroidEntryPoint
 class ThemePreferenceFragment : Fragment() {
@@ -76,7 +72,7 @@ class ThemePreferenceFragment : Fragment() {
             val params = GridLayout.LayoutParams()
             params.width = GridLayout.LayoutParams.WRAP_CONTENT
             params.height = GridLayout.LayoutParams.WRAP_CONTENT
-            params.setMargins(5, 8, 5, 8)
+            params.setMargins(20, 8, 20, 8)
             linearLayout.layoutParams = params // Use GridLayout.LayoutParams for the LinearLayout
 
             // Set up click listener

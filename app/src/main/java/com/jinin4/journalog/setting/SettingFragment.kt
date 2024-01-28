@@ -80,21 +80,21 @@ class SettingFragment : Fragment() {
             lifecycleScope.launch {
                 if (PasswordUtils.isValidPassword(newPassword) && isFirstPasswordAttempt(newPassword)) {
                     // 첫 번째 시도
-                    PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
+                    PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요.")
                 } else {
                     // 두 번째 시도
                     if (PasswordUtils.isValidPassword(newPassword)) {
                         PasswordUtils.savePasswordToDataStore(requireContext(),newPassword)
-                        PasswordUtils.showToast(requireContext(),"비밀번호가 설정되었습니다")
+                        PasswordUtils.showToast(requireContext(),"비밀번호가 설정되었습니다.")
                     } else {
-                        PasswordUtils.showToast(requireContext(),"4자리 숫자로 비밀번호를 설정해주세요")
+                        PasswordUtils.showToast(requireContext(),"4자리 숫자로 비밀번호를 설정해주세요.")
                     }
                 }
             }
         }
 
         // 초기 타이틀 설정
-        val initialTitle = "4자리 숫자를 입력해주세요"
+        val initialTitle = "4자리 숫자를 입력해주세요."
         passwordSetupDialog.setTitle(initialTitle)
 
         passwordSetupDialog.show(parentFragmentManager, "PasswordSetupDialog")
@@ -109,7 +109,7 @@ class SettingFragment : Fragment() {
             lifecycleScope.launch {
                 if (isPasswordCorrect) {
                     // 비밀번호가 맞으면 비밀번호 해제 메시지 표시하고 비밀번호 초기화
-                    PasswordUtils.showToast(requireContext(),"비밀번호가 비활성되었습니다")
+                    PasswordUtils.showToast(requireContext(),"비밀번호가 비활성되었습니다.")
                     PasswordUtils.clearPasswordInDataStore(requireContext())
                 }
             }

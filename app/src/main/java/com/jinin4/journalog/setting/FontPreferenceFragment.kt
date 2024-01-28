@@ -79,7 +79,10 @@ class FontPreferenceFragment : Fragment() {
         // 초기화 시에 저장된 데이터를 읽어와서 SeekBar의 progress 설정
         lifecycleScope.launch {
             val preferences = context?.dataStore?.data?.first()
-            val initialFontSize = preferences?.fontSize ?: 17
+            var initialFontSize = preferences?.fontSize ?: 17
+            if (initialFontSize<=0){
+                initialFontSize=17
+            }
             fontSizeSeekBar.progress = initialFontSize
         }
 

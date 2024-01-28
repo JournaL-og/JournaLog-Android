@@ -81,7 +81,7 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
         // 첫 번째 시도에서는 타이틀만 변경
         savePasswordToDataStore(password)
         binding.editTextPassword.text.clear()
-        dialog.setTitle("비밀번호를 확인해주세요")
+        dialog.setTitle("비밀번호를 확인해주세요.")
         isFirstAttempt = false
     }
 
@@ -89,10 +89,10 @@ class PasswordSetupDialogFragment(private val onPasswordEntered: (String) -> Uni
         // 두 번째 시도에서는 실제 비밀번호 확인
         if (PasswordUtils.checkPassword(requireContext(),password)) {
             savePasswordToDataStore(password)
-            PasswordUtils.showToast(requireContext(),"비밀번호가 설정되었습니다")
+            PasswordUtils.showToast(requireContext(),"비밀번호가 설정되었습니다.")
             dialog.dismiss()
         } else {
-            PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요")
+            PasswordUtils.showToast(requireContext(),"비밀번호를 확인해주세요.")
             binding.editTextPassword.text.clear()
         }
     }

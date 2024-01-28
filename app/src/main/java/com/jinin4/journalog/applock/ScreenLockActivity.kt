@@ -37,7 +37,7 @@ class ScreenLockActivity : Activity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLockScreenBinding.inflate(layoutInflater)
-        binding.tvMessage.text="비밀번호를 입력해주세요"
+        binding.tvMessage.text="비밀번호를 입력해주세요."
         setContentView(binding.root)
 
         setupFilters(numberFilter)
@@ -134,7 +134,7 @@ class ScreenLockActivity : Activity(){
                 setResult(RESULT_OK);
                 finish()
             } else {
-                binding.tvMessage.text="비밀번호를 다시 입력해주세요"
+                binding.tvMessage.text="비밀번호를 다시 입력해주세요."
                 onPasscodeError()
             }
         }
