@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tag_tabs"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.466">
 
         <ImageButton
             android:id="@+id/entire_btn"
@@ -33,73 +33,73 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/red_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/red_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/orange_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/orange_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/yellow_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/yellow_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/green_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/green_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/blue_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/blue_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/indigo_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/navi_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/pupple_btn"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_margin="5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/purple_sw"
-            app:cornerRadius="20dp"/>
+            app:cornerRadius="20dp" />
 
     </LinearLayout>
 
