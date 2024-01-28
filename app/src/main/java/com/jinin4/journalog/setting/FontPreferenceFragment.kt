@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +22,8 @@ import com.jinin4.journalog.databinding.FragmentFontPreferenceBinding
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-// 반정현 - 24.01.22
+//반정현 작성 - 24.01.22
+//반정현 수정 - 24.01.26
 class FontPreferenceFragment : Fragment() {
 
     private lateinit var binding: FragmentFontPreferenceBinding
@@ -44,10 +46,16 @@ class FontPreferenceFragment : Fragment() {
         for (fontType in fontTypes) {
             val button = Button(requireContext())
             button.text = fontType
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+
+            // 현재 폰트에 대한 Typeface 얻기
+            val typeface = ResourcesCompat.getFont(requireContext(), resources.getIdentifier(fontType, "font", requireContext().packageName))
+            button.setTypeface(typeface)
+            if (fontType == "nanumpen") button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
+            else button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+
             val params = GridLayout.LayoutParams()
             params.width = GridLayout.LayoutParams.WRAP_CONTENT
-            params.height = GridLayout.LayoutParams.WRAP_CONTENT
+            params.height = 100
             params.setMargins(5, 8, 5, 8)
             button.layoutParams = params
 

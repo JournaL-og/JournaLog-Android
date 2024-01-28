@@ -1,13 +1,19 @@
 package com.jinin4.journalog.setting
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.GridLayout
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -22,7 +28,7 @@ import com.jinin4.journalog.databinding.FragmentThemePreferenceBinding
 import com.jinin4.journalog.utils.FontUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-// 반정현 - 24.01.23
+// 반정현 수정 - 24.01.26
 @AndroidEntryPoint
 class ThemePreferenceFragment : Fragment() {
     private val viewModel: ThemeViewModel by viewModels()
@@ -38,22 +44,44 @@ class ThemePreferenceFragment : Fragment() {
         val view=binding.root
         themeContainer=binding.themeContainer
         val themeValues = resources.getStringArray(R.array.theme_values)
-        val themeEntries= resources.getStringArray(R.array.theme_entries)
-        for (themeValue in themeValues) {
-            val button = Button(requireContext())
-            button.text = themeEntries[themeValue.toString().toInt()]
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+        val themeEntries = resources.getStringArray(R.array.theme_entries)
+        val vectorDrawables = arrayOf(
+            R.drawable.ic_theme_1,
+            R.drawable.ic_theme_2,
+            R.drawable.ic_theme_3,
+            R.drawable.ic_theme_4,
+            // 필요에 따라 더 많은 벡터 드로어블 추가
+        )
+
+        for ((index, themeValue) in themeValues.withIndex()) {
+            val imageButton = ImageButton(requireContext())
+            imageButton.setImageResource(vectorDrawables[index])
+            imageButton.setBackgroundColor(Color.TRANSPARENT) // Optional: Make background transparent
+            imageButton.scaleType = ImageView.ScaleType.FIT_CENTER
+            imageButton.setPadding(16, 16, 16, 16)
+
+            // Set up text below the image
+            val buttonText = TextView(requireContext())
+            buttonText.text = themeEntries[themeValue.toInt()]
+            buttonText.gravity = Gravity.CENTER
+            buttonText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+
+            // Create a vertical LinearLayout to hold the image and text
+            val linearLayout = LinearLayout(requireContext())
+            linearLayout.orientation = LinearLayout.VERTICAL
+            linearLayout.addView(imageButton)
+            linearLayout.addView(buttonText)
+
+            // Set up ImageButton properties with GridLayout.LayoutParams for the LinearLayout
             val params = GridLayout.LayoutParams()
             params.width = GridLayout.LayoutParams.WRAP_CONTENT
             params.height = GridLayout.LayoutParams.WRAP_CONTENT
             params.setMargins(5, 8, 5, 8)
-            button.layoutParams = params
+            linearLayout.layoutParams = params // Use GridLayout.LayoutParams for the LinearLayout
 
-            button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_border_button)
-            button.setPadding(16, 0, 16, 0)
-
-            button.setOnClickListener {
-                val selectedTheme = Preference.Theme.forNumber(themeValue.toString().toInt())
+            // Set up click listener
+            imageButton.setOnClickListener {
+                val selectedTheme = Preference.Theme.forNumber(themeValue.toInt())
                 lifecycleScope.launch {
                     viewModel.changeTheme(selectedTheme)
                     val newFragment = ThemePreviewFragment()
@@ -63,8 +91,10 @@ class ThemePreferenceFragment : Fragment() {
                 }
             }
 
-            themeContainer.addView(button)
+            themeContainer.addView(linearLayout)
         }
+
+
         return view
     }
 

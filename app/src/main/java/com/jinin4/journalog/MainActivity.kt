@@ -6,12 +6,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.util.TypedValue
-import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -29,8 +25,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: ThemeViewModel by viewModels()
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var toolbar: Toolbar
+    private lateinit var binding:ActivityMainBinding
     private var isWeek = true
     override fun onCreate(savedInstanceState: Bundle?) {
         //앱 시작할 때 테마 적용
@@ -44,6 +39,7 @@ class MainActivity : AppCompatActivity() {
                 Preference.Theme.LIGHT_THEME_1 -> setTheme(R.style.LIGHT_THEME_1)
                 Preference.Theme.LIGHT_THEME_2 -> setTheme(R.style.LIGHT_THEME_2)
                 Preference.Theme.LIGHT_THEME_3 -> setTheme(R.style.LIGHT_THEME_3)
+                Preference.Theme.LIGHT_THEME_4 -> setTheme(R.style.LIGHT_THEME_4)
                 else->setTheme(R.style.LIGHT_THEME_1)
             }
             val typedValue = TypedValue()
@@ -140,6 +136,7 @@ class MainActivity : AppCompatActivity() {
                 Preference.Theme.LIGHT_THEME_1 -> setTheme(R.style.LIGHT_THEME_1)
                 Preference.Theme.LIGHT_THEME_2 -> setTheme(R.style.LIGHT_THEME_2)
                 Preference.Theme.LIGHT_THEME_3 -> setTheme(R.style.LIGHT_THEME_3)
+                Preference.Theme.LIGHT_THEME_4 -> setTheme(R.style.LIGHT_THEME_4)
                 else->setTheme(R.style.LIGHT_THEME_1)
             }
             onThemeApplied()

@@ -120,7 +120,8 @@
             <Switch
                 android:id="@+id/timeDisplay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:checked="true"/>
         </LinearLayout>
 
         <View

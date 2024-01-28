@@ -14,7 +14,7 @@ import com.jinin4.journalog.utils.FontUtils
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.coroutines.launch
-
+//반정현 수정 - 24.01.26
 class ThemePreviewFragment :BaseFragment(){
     private lateinit var binding: FragmentThemePreviewBinding
     override fun onCreateView(
