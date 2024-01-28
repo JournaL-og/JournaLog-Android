@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.Preference
 import com.jinin4.journalog.R
@@ -37,12 +38,13 @@ import org.threeten.bp.format.DateTimeFormatter
 class CalendarFragment : BaseFragment(),MemoInsertCallback {
     //private val viewModel: ThemeViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
+    private lateinit var viewPager: ViewPager
     private lateinit var adapter: CalendarMemoRecyclerViewAdapter
     private lateinit var memoList: List<MemoEntity>
     lateinit var db: JournaLogDatabase
     lateinit var memoDao: MemoDao
     lateinit var photoDao: PhotoDao
-
+    private var memoSortOrder: Boolean = false
     private var isWeek = true
 
     override fun onCreateView(
@@ -55,6 +57,10 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         viewLifecycleOwner.lifecycleScope.launch {
             context?.dataStore?.data?.collect { preferences ->
                 val calendarView = preferences.calendarView
+                memoSortOrder = when (preferences.diarySortOrder) {
+                    Preference.SortOrder.DESCENDING -> true
+                    else -> false
+                }
                 binding.calendarView.visibility = if (!calendarView) View.VISIBLE else View.GONE
                 val weekStartDay = preferences.weekStartDay
                 val firstDayOfWeek = when (weekStartDay) {
@@ -67,14 +73,11 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
                     .commit()
             }
         }
-
-
-
         val calendarView: MaterialCalendarView = binding.calendarView
         viewLifecycleOwner.lifecycleScope.launch {
             val typeface = FontUtils.getFontType(requireContext())
             val fontSize = FontUtils.getFontSize(requireContext())
-            calendarView.addDecorator(CustomFontCalendarDecorator(typeface, fontSize*2))
+            calendarView.addDecorator(CustomFontCalendarDecorator(typeface, fontSize * 2))
         }
 
 
@@ -95,10 +98,11 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         }
         calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 선택하기
         getMemos(CalendarDay.today()) //오늘 메모 가져오기
-        binding.tvSelectedDate.text=calendarView.selectedDate!!.date.format(formatter_hangul)// 초기 좌상단 날짜 설정
+        binding.tvSelectedDate.text =
+            calendarView.selectedDate!!.date.format(formatter_hangul)// 초기 좌상단 날짜 설정
 
-        binding.btnToday.setOnClickListener{
-            val date =  CalendarDay.today()
+        binding.btnToday.setOnClickListener {
+            val date = CalendarDay.today()
             calendarView.setCurrentDate(date)
             calendarView.selectedDate = date // 오늘 날짜 선택하기
 //            calendarView.setDateSelected(CalendarDay.today(), true)
@@ -137,8 +141,8 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
 
 
-        binding.fabAddMemo.setOnClickListener{
-            val modal = MemoCreateBottomSheet(calendarView.selectedDate!!,this,null)
+        binding.fabAddMemo.setOnClickListener {
+            val modal = MemoCreateBottomSheet(calendarView.selectedDate!!, this, null)
             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
             modal.setTargetFragment(this, 1)
             modal.show(requireActivity().supportFragmentManager, MemoCreateBottomSheet.TAG)
@@ -151,7 +155,11 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     private fun getMemos(date: CalendarDay) {
         Thread {
             val formatter_datetime = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
+
+            memoList = when (memoSortOrder) {
+                true -> memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
+                else -> memoDao.getMemoByTimestampAsc(date.date.format(formatter_datetime))
+            }
 
             MemoWithUrisList = emptyList()
             for (memoEntity in memoList) {

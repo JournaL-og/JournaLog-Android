@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jinin4.journalog.Preference
 import com.jinin4.journalog.calendar.MemoInsertCallback
+import com.jinin4.journalog.dataStore
 import com.jinin4.journalog.databinding.FragmentTagBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
@@ -20,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
+import org.threeten.bp.DayOfWeek
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -31,11 +35,21 @@ class TagFragment : BaseFragment(),MemoInsertCallback {
     private lateinit var binding: FragmentTagBinding
     private lateinit var db: JournaLogDatabase
     private lateinit var photoDao: PhotoDao
+    private var memoSortOrder: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTagBinding.inflate(inflater, container, false)
         db = JournaLogDatabase.getInstance(binding.root.context)!!
         photoDao = db.getPhotoDao()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            context?.dataStore?.data?.collect { preferences ->
+                memoSortOrder = when (preferences.diarySortOrder) {
+                    Preference.SortOrder.DESCENDING -> true
+                    else -> false
+                }
+            }
+        }
 
         getAllMemoList()
         setupButtonListeners()
@@ -62,7 +76,11 @@ class TagFragment : BaseFragment(),MemoInsertCallback {
 
     private fun getAllMemoList() {
         CoroutineScope(Dispatchers.IO).launch {
-            val memos = db.getMemoDao().getAllMemo()
+            val memos = when (memoSortOrder) {
+                true -> db.getMemoDao().getAllMemo()
+                else -> db.getMemoDao().getAllMemoAsc()
+            }
+
             val imageMap = getImageMap(memos)
             withContext(Dispatchers.Main) {
                 setRecyclerView(memos, imageMap)
@@ -72,7 +90,12 @@ class TagFragment : BaseFragment(),MemoInsertCallback {
 
     private fun filterMemosByColorId(colorId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val filteredMemos = db.getMemoDao().getMemosByColorId(colorId)
+            val filteredMemos = when (memoSortOrder) {
+                true -> db.getMemoDao().getMemosByColorId(colorId)
+                else -> db.getMemoDao().getMemosByColorIdAsc(colorId)
+            }
+
+
             val imageMap = getImageMap(filteredMemos)
             withContext(Dispatchers.Main) {
                 setRecyclerView(filteredMemos, imageMap)
