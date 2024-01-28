@@ -76,6 +76,7 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
         }
 
 
+
         calendarView.topbarVisible = false // topbar 삭제
 
 //        calendarView.setBackgroundColor(resources.getColor(R.color.note))

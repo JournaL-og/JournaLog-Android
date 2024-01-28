@@ -25,7 +25,7 @@ object FontUtils {
         }
     }
     suspend fun getFontSize(context: Context): Float {
-        val fontSize = context.dataStore.data.first().fontSize ?: 16
+        val fontSize = context.dataStore.data.first().fontSize ?: 17
         return when {
             fontSize == 0 -> 17.toFloat()
             else -> fontSize.toFloat()
