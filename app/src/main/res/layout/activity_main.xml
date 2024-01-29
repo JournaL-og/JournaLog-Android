@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--  이상원 작성 - 24.01.22 -->
+<!--  반정현 수정 - 24.01.24 -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,6 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <FrameLayout
+        android:id="@+id/container_preview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.8" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,15 +34,11 @@
         android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:itemActiveIndicatorStyle="@style/CustomIndicatorStyle"
         app:menu="@menu/bottom_navigation_menu"
         app:labelVisibilityMode="unlabeled"
-        app:itemTextAppearanceActive="@color/note"
-        app:itemRippleColor="@color/note"
-        app:itemBackground="@color/white"
-        app:itemTextColor="@color/note"
+        app:itemBackground="?attr/bottombackground"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

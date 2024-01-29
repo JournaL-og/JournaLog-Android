@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="20dp">
+
+
+
+    <!-- FontType Buttons -->
+    <GridLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fontTypeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:background="?attr/colorAccent"
+        android:padding="16dp">
+    </GridLayout>
+
+
+
+    <!-- FontSize SeekBar -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="크기"
+        android:textSize="18sp"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <SeekBar
+        android:id="@+id/fontSizeSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp"
+        android:min="5"
+        android:max="30"
+    />
+
+</LinearLayout>

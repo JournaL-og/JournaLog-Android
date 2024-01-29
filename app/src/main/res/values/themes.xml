@@ -1,9 +1,71 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.JournaLog" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="BasicTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        전체적인 배경색 설정-->
+        <item name="android:colorBackground">@color/grey</item>
+        <item name="memocolor">@color/white</item>
+        <item name="calendercolor">@color/white</item>
+        <item name="pickcolor">@color/moon</item>
+        <item name="navigationpick">@color/moon</item>
+        <item name="iconcolor">@color/black</item>
+        <item name="modalbackground">@color/grey</item>
+        <item name="bottombackground">@color/white</item>
+    </style>
+    <style name="datePickerDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <!-- 상단 색 변경 -->
+        <item name="colorAccent">@color/colorPrimary</item>
+        <!-- dialog의 배경 변경 -->
+<!--        <item name="background">@drawable/rounded_border</item>-->
+        <!-- 선택한 날짜를 표시할 색상 -->
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <!-- 취소/확인버튼 색상 -->
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+<!--    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.Material3.MaterialCalendar">-->
+<!--        <item name="colorPrimary">#FFCDD2</item>-->
+<!--        <item name="colorOnPrimary">#FFAB91</item>-->
+<!--        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>-->
+<!--        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent</item>-->
+<!--        &lt;!&ndash; Customize text field of the text input mode. &ndash;&gt;-->
+<!--&lt;!&ndash;        <item name="textInputStyle">@style/Widget.Design.TextInputLayout</item>&ndash;&gt;-->
+<!--    </style>-->
+
+
+<!--    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">-->
+<!--        <item name="cornerFamily">cut</item>-->
+<!--    </style>-->
+
+<!--    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">-->
+<!--        <item name="cornerSize">16dp</item>-->
+<!--    </style>-->
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="Theme.JournaLog" parent="Base.Theme.JournaLog" />
+    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_modal_bottom_sheet</item>
+    </style>
+
+<!--    달력 날짜 부분 텍스트-->
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+<!--        <item name="android:textColor">@color/navi_sw</item>-->
+<!--        <item name="fontFamily">@font/nanummyeongjo</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+    </style>
+<!--    달력 요일 부분 텍스트 -->
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+<!--        <item name="android:textColor">@color/note</item>-->
+        <item name="android:textStyle">bold</item>
+<!--        <item name="fontFamily">@font/notosans</item>-->
+    </style>
+
+
+
 </resources>

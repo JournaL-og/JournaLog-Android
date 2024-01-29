@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/preferences_detail"
+
+    >
+
+
+    <ListPreference
+        app:title="글꼴"
+        app:key="fontType"
+        app:entries="@array/font_entries"
+        app:entryValues="@array/font_values"
+        app:defaultValue="nanumsquare"
+        />
+    <SeekBarPreference
+        app:title="크기"
+        app:key="fontSize"
+        app:defaultValue="72"
+     />
+
+
+</PreferenceScreen>

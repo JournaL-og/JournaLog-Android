@@ -1,19 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
+    <!--이상원 작성 24-01-23-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_timestamp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="메모 테스트!!!!!!!!!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
+        android:background="@drawable/rounded_textview_background_timestamp"
+        android:padding="5dp"
+        android:text="10:52"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:tag="exclude"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_content_images"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_border"
+        android:paddingStart="3dp"
+        android:paddingEnd="10dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_timestamp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="300dp">
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/rounded_border"
+            android:padding="10dp"
+            android:text="메모 테스트ek메모 테스트ek메모 테스트eqefqfeqfk메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek메모 테스트ek"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_imageGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content"
+            tools:listitem="@layout/item_memo_get_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.09" />
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/ll_content_images"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:background="@drawable/rounded_border"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/tv_timestamp"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintWidth_max="300dp"-->
+    <!--        android:paddingEnd="30dp"-->
+    <!--        >-->
+    <!--    -->
+    <!--    -->
+    <!--        -->
+    <!--    -->
+    <!--    </LinearLayout>-->
+
+
+    <!--    app:layout_constraintHeight_max="330dp"-->
+    <!--    android:background="@drawable/rounded_textview_background_content"-->
+    <!--    app:layout_constraintWidth_percent="0.83"-->
 </androidx.constraintlayout.widget.ConstraintLayout>

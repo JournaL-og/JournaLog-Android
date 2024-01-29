@@ -56,7 +56,7 @@ class TestFragment : Fragment() {
             val formattedDateTime = currentDateTime.format(formatter)
 
             // sqlite 에는 Date 타입이 없어 스트링으로 넣어야 함!! 참고하세요
-            var memoEntity = MemoEntity(null, "아 아주 나른한 오후네요", formattedDateTime, 1)
+            var memoEntity = MemoEntity(null, "purple-Test", formattedDateTime, 7)
 
             Thread{
                 memoDao.insertMemo(memoEntity)
@@ -65,11 +65,20 @@ class TestFragment : Fragment() {
                 }
             }.start()
         }
+        //최성혁 - 24.01.22
+        binding.btnDeleteDb.setOnClickListener {
+            Thread{
+                memoDao.deleteAllMemos()
+            }.start()
+        }
 
-
-
-
-
+//        Thread{
+//            val memo1 = memoDao.getMemoById(1)
+//
+//            requireActivity().runOnUiThread{
+//                binding.testIdDe.text = memo1.content
+//            }
+//        }.start()
 
         return binding.root
     }

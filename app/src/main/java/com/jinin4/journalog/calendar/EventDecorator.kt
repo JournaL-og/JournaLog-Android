@@ -45,5 +45,4 @@ class EventDecorator(private val radius: Float, private val color: Int, dates: C
             paint.color = oldColor
         }
     }
-
 }
