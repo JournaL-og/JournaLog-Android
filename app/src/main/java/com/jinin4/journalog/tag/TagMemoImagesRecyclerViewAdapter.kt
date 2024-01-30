@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
+// 최성혁 작성 - 24.01.23
 class TagMemoImagesRecyclerViewAdapter(private val photoUris: List<String>) :
     RecyclerView.Adapter<TagMemoImagesRecyclerViewAdapter.ImageViewHolder>() {
     class ImageViewHolder(val imageView: ImageView) : RecyclerView.ViewHolder(imageView)

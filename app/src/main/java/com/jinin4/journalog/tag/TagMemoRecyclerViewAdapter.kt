@@ -31,7 +31,7 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-//최성혁 - 24.01.22
+//최성혁 작성 - 24.01.22
 class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
                                  private val photos: Map<Int, List<PhotoEntity>>,
                                  private val tag:TagFragment) :
@@ -148,7 +148,7 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
 
             val marginSize = dpToPx(4,holder.itemView.context)
             val imageWidth = (holder.imageContainer.width / 2) - (marginSize * 2)
-            val imageHeight = dpToPx(100, holder.itemView.context) // 또는 원하는 높이 값
+            val imageHeight = dpToPx(100, holder.itemView.context) // 원하는 높이 값
             val imageRealHeight = (imageHeight * 1.9).toInt()
 
             photoUris.forEach { photoUrl ->
@@ -183,6 +183,7 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
         holder.cltag_.setOnClickListener({showMemoEditDialog(holder,memo)})
     }
 
+    // dp(밀도 독립적 픽셀)를 픽셀로 변환하는 도우미 함수
     private fun dpToPx(dp: Int, context: Context): Int {
         return (dp * context.resources.displayMetrics.density).toInt()
     }
@@ -198,8 +199,8 @@ class TagMemoRecyclerViewAdapter(private val memoList: ArrayList<MemoEntity>,
         val timeParts = timePartRaw.split(":")
         val timePart = "${timeParts[0]}시 ${timeParts[1]}분"
 
-        val memo2 = MemoEntity(memoEntity.memo_id,memoEntity.content,timePart,memoEntity.color_id)
-        val modal = MemoCreateBottomSheet(toCalendarDay(datePart)!!, tag, memo2)
+        val injectionMemo = MemoEntity(memoEntity.memo_id,memoEntity.content,timePart,memoEntity.color_id)
+        val modal = MemoCreateBottomSheet(toCalendarDay(datePart)!!, tag, injectionMemo)
         modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
         modal.setTargetFragment(tag, 1)
         modal.show(
