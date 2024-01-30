@@ -5,7 +5,6 @@ import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,12 +14,9 @@ import androidx.viewbinding.ViewBinding
 import com.jinin4.journalog.MemoRightColorSetting
 import com.jinin4.journalog.MemoRightColorSetting.getColorById
 import com.jinin4.journalog.R
-import com.jinin4.journalog.RecyclerViewItemClickListener
 import com.jinin4.journalog.calendar.bottom_sheet.MemoCreateBottomSheet
 import com.jinin4.journalog.databinding.ItemCalendarMemoBinding
 import com.jinin4.journalog.databinding.ItemCalendarMemoTextBinding
-import com.jinin4.journalog.db.memo.MemoEntity
-import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.utils.FontUtils
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlinx.coroutines.Dispatchers

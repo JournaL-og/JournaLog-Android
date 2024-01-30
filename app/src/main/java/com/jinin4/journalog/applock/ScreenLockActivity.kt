@@ -13,7 +13,6 @@ import android.view.animation.AnimationUtils
 import android.widget.EditText
 import com.jinin4.journalog.databinding.ActivityLockScreenBinding
 import com.jinin4.journalog.utils.PasswordUtils
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

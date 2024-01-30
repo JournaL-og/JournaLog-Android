@@ -1,5 +1,4 @@
 import android.content.Context
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView

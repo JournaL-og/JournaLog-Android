@@ -18,7 +18,7 @@ import com.jinin4.journalog.databinding.FragmentDisplayPreferenceBinding
 import com.jinin4.journalog.utils.FontUtils
 import kotlinx.coroutines.launch
 
-//반정현 - 24.01.22
+//반정현 작성 - 24.01.22
 //반정현 수정 - 24.01.26
 class DisplayPreferenceFragment : Fragment() {
     private lateinit var binding: FragmentDisplayPreferenceBinding
@@ -27,6 +27,7 @@ class DisplayPreferenceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDisplayPreferenceBinding.inflate(inflater, container, false)
+        // 하단 내비게이션바 비활성화
         hideBottomNavigation(true)
 
         val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.day_of_week_entries, android.R.layout.simple_spinner_item)
@@ -47,18 +48,6 @@ class DisplayPreferenceFragment : Fragment() {
             }
         }
 
-        // DataStore에서 값을 읽어와서 Spinner의 선택된 항목을 설정
-        lifecycleScope.launch {
-            context?.dataStore?.data?.collect { preferences ->
-                val diarySortOrder = preferences.diarySortOrder
-                val position = when (diarySortOrder) {
-                    Preference.SortOrder.DESCENDING -> 0
-                    Preference.SortOrder.ASCENDING -> 1
-                    else -> 0
-                }
-                binding.diarySortOrder.setSelection(position)
-            }
-        }
 
         // 주 시작 일 설정
         binding.weekStartDay.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -79,6 +68,20 @@ class DisplayPreferenceFragment : Fragment() {
             }
         }
 
+        // DataStore에서 값을 읽어와서 Spinner의 선택된 항목을 설정
+        lifecycleScope.launch {
+            context?.dataStore?.data?.collect { preferences ->
+                val diarySortOrder = preferences.diarySortOrder
+                val position = when (diarySortOrder) {
+                    Preference.SortOrder.DESCENDING -> 0
+                    Preference.SortOrder.ASCENDING -> 1
+                    else -> 0
+                }
+                binding.diarySortOrder.setSelection(position)
+            }
+        }
+
+        // 일기 정렬 설정
         binding.diarySortOrder.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -113,6 +116,7 @@ class DisplayPreferenceFragment : Fragment() {
             }
         }
 
+        // 뒤로가기 버튼을 누르면 설정 패이지로 이동
         binding.backButton.setOnClickListener{
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             val transaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -127,6 +131,7 @@ class DisplayPreferenceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // DataStore의 폰트정보를 가져와서 폰트 적용, 글씨 크기는 기본값 17
         viewLifecycleOwner.lifecycleScope.launch {
             val typeface = FontUtils.getFontType(requireContext())
             FontUtils.applyFont(view, typeface,17f)
@@ -134,6 +139,7 @@ class DisplayPreferenceFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
+        // 하단 내비게이션바 활성화
         hideBottomNavigation(false)
     }
 

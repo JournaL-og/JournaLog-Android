@@ -9,7 +9,7 @@ import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
-//반정현 - 24.01.22
+//반정현 작성 - 24.01.22
 
 object PreferenceSerializer : Serializer<Preference> {
     override val defaultValue: Preference = Preference.getDefaultInstance()

@@ -23,7 +23,7 @@ import com.jinin4.journalog.databinding.FragmentThemePreferenceBinding
 import com.jinin4.journalog.utils.FontUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+//반정현 작성 - 24.01.22
 // 반정현 수정 - 24.01.26
 @AndroidEntryPoint
 class ThemePreferenceFragment : Fragment() {
@@ -56,26 +56,23 @@ class ThemePreferenceFragment : Fragment() {
             imageButton.scaleType = ImageView.ScaleType.FIT_CENTER
             imageButton.setPadding(16, 16, 16, 16)
 
-            // Set up text below the image
+            // 이미지 아래 텍스트 수정
             val buttonText = TextView(requireContext())
             buttonText.text = themeEntries[themeValue.toInt()]
             buttonText.gravity = Gravity.CENTER
             buttonText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
 
-            // Create a vertical LinearLayout to hold the image and text
             val linearLayout = LinearLayout(requireContext())
             linearLayout.orientation = LinearLayout.VERTICAL
             linearLayout.addView(imageButton)
             linearLayout.addView(buttonText)
 
-            // Set up ImageButton properties with GridLayout.LayoutParams for the LinearLayout
             val params = GridLayout.LayoutParams()
             params.width = GridLayout.LayoutParams.WRAP_CONTENT
             params.height = GridLayout.LayoutParams.WRAP_CONTENT
             params.setMargins(20, 8, 20, 8)
             linearLayout.layoutParams = params // Use GridLayout.LayoutParams for the LinearLayout
 
-            // Set up click listener
             imageButton.setOnClickListener {
                 val selectedTheme = Preference.Theme.forNumber(themeValue.toInt())
                 lifecycleScope.launch {
@@ -98,7 +95,7 @@ class ThemePreferenceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 처음 화면이 생성될 때 ThemePreviewFragment를 불러옵니다.
+        // 처음 화면이 생성될 때 ThemePreviewFragment를 불러오기
         val newFragment = ThemePreviewFragment()
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_preview, newFragment)
@@ -120,7 +117,7 @@ class ThemePreferenceFragment : Fragment() {
                 .remove(previewFragment)
                 .commit()
         }
-        // Preview container를 숨깁니다.
+        // Preview container를 숨기기
         activity?.findViewById<FrameLayout>(R.id.container_preview)?.visibility = View.GONE
         hideBottomNavigation(false)
     }

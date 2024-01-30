@@ -4,12 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import androidx.room.Update
-import com.jinin4.journalog.Converter
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import java.sql.Timestamp
 
 // 이상원 - 24.01.19
 @Dao

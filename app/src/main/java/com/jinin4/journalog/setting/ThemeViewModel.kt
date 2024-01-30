@@ -10,7 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-//반정현 수정 - 24.01.26
+
+//반정현 작성 - 24.01.26
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
     @ApplicationContext private val context: Context

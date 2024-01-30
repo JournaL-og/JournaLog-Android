@@ -12,7 +12,7 @@ import com.jinin4.journalog.utils.FontUtils
 import com.jinin4.journalog.utils.PasswordUtils
 import kotlinx.coroutines.launch
 
-//이상원 - 24.01.19, 반정현 - 24.01.22 수정
+//이상원 - 24.01.19, 반정현 수정 - 24.01.22
 //반정현 수정 - 24.01.26
 class SettingFragment : Fragment() {
 

@@ -4,16 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jinin4.journalog.Preference
 import com.jinin4.journalog.calendar.MemoInsertCallback
 import com.jinin4.journalog.dataStore
 import com.jinin4.journalog.databinding.FragmentTagBinding
-import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
@@ -23,10 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
-import org.threeten.bp.DayOfWeek
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 //이상원 - 24.01.19
 //최성혁 - 수정 24.01.22

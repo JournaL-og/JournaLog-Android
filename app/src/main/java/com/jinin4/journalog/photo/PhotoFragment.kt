@@ -1,24 +1,21 @@
 package com.jinin4.journalog.photo
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.jinin4.journalog.databinding.FragmentPhotoBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity
 import com.jinin4.journalog.db.photo.PhotoDao
 import com.jinin4.journalog.db.photo.PhotoEntity
-import com.jinin4.journalog.firebase.storage.FirebaseFileManager
 import com.jinin4.journalog.utils.BaseFragment
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.developia.todolist.db.JournaLogDatabase
 
 //이상원 - 24.01.19

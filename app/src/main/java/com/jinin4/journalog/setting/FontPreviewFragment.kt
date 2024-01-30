@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.jinin4.journalog.utils.BaseFragment
 import com.jinin4.journalog.databinding.FragmentFontPreviewBinding
-//반정현 수정 - 24.01.26
+import com.jinin4.journalog.utils.BaseFragment
+
+//반정현 작성 - 24.01.26
 class FontPreviewFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFontPreviewBinding
