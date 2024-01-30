@@ -4,7 +4,6 @@ package com.jinin4.journalog.photo
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,8 +64,6 @@ class CustomPhotoDialogFragment(private val photoList: MutableList<PhotoEntity>,
         btnShare.setOnClickListener {
             val currentPosition = viewPager.currentItem
             val currentImageUri = photoList[currentPosition].photo_uri.toUri()
-
-            Log.d("share currentImageUri",currentImageUri.toString())
 
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/*"
