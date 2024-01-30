@@ -18,17 +18,6 @@
         android:scaleType="centerCrop"
         android:background="@drawable/rounded_border"
         />
-<!--    android:scaleType="center"-->
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/btn_removeImage"-->
-<!--        android:layout_width="20dp"-->
-<!--        android:layout_height="20dp"-->
-<!--        android:background="@drawable/ic_cancel3"-->
-<!--        android:gravity="end|top"-->
-<!--        android:text="x"-->
-
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageButton
         android:id="@+id/btn_removeImage"
@@ -39,14 +28,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/btn_removeImage3"-->
-<!--        android:layout_width="20dp"-->
-<!--        android:layout_height="20dp"-->
-<!--        android:src="@drawable/ic_cancel3"-->
-<!--        android:gravity="end|top"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"

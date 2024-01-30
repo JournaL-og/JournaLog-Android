@@ -63,25 +63,4 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.09" />
 
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/ll_content_images"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="vertical"-->
-    <!--        android:background="@drawable/rounded_border"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/tv_timestamp"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:layout_constraintWidth_max="300dp"-->
-    <!--        android:paddingEnd="30dp"-->
-    <!--        >-->
-    <!--    -->
-    <!--    -->
-    <!--        -->
-    <!--    -->
-    <!--    </LinearLayout>-->
-
-
-    <!--    app:layout_constraintHeight_max="330dp"-->
-    <!--    android:background="@drawable/rounded_textview_background_content"-->
-    <!--    app:layout_constraintWidth_percent="0.83"-->
 </androidx.constraintlayout.widget.ConstraintLayout>

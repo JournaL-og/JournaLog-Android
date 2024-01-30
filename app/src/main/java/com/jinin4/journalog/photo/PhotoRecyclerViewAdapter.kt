@@ -18,7 +18,6 @@ import com.jinin4.journalog.db.photo.PhotoEntity
 
 // 이지윤 작성 - 24.01.22
 class PhotoRecyclerViewAdapter(private val context: Context, private val photoList: MutableList<PhotoEntity>, private val memoList: MutableList<MemoEntity>, private val fragmentManager: FragmentManager)
-//class PhotoRecyclerViewAdapter(private val context: Context, private val uriList : MutableList<String>,private val fragmentManager: FragmentManager)
     : RecyclerView.Adapter<PhotoRecyclerViewAdapter.PhotoViewHolder>() {
 
     inner class PhotoViewHolder(binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {

@@ -60,37 +60,5 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.92" />
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/ll_content"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:background="@drawable/rounded_textview_background_content"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/tv_timestamp"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        android:padding="15dp">-->
-
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/tv_title"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_margin="5dp"-->
-    <!--            android:text="메모 테스트!!!!!!!qenlkfqenfklqefnqfqenklfqenqeklfqenkflqefnklqeqefqegqegeqfeq jkfqejkfnjk" />-->
-    <!--&lt;!&ndash;        android:background="@drawable/rounded_textview_background_content"&ndash;&gt;-->
-    <!--        <GridView-->
-    <!--            android:id="@+id/gridView"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:columnWidth="100dp"-->
-    <!--            android:gravity="center"-->
-    <!--            android:numColumns="4"-->
-    <!--            android:stretchMode="columnWidth" />-->
-    <!--    </LinearLayout>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
