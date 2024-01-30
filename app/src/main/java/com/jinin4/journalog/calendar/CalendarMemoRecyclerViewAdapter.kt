@@ -45,7 +45,6 @@ class CalendarMemoRecyclerViewAdapter(
     inner class MemoViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val timestamp = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvTimestamp else (binding as ItemCalendarMemoBinding).tvTimestamp
         val content = if (isOnlyText) (binding as ItemCalendarMemoTextBinding).tvContent else (binding as ItemCalendarMemoBinding).tvContent
-        //val imageGrid = if (isOnlyText) null else (binding as ItemCalendarMemoBinding).gridView
         val imageGrid = if (isOnlyText) null else (binding as ItemCalendarMemoBinding).rvImageGrid
         val layoutContentImage = if (isOnlyText) null else (binding as ItemCalendarMemoBinding).clContentImages
         val root = binding.root
@@ -96,7 +95,6 @@ class CalendarMemoRecyclerViewAdapter(
 
         if (isOnlyText) {
             holder.content.setOnClickListener {
-//            Toast.makeText(binding_.root.context, "dd", Toast.LENGTH_SHORT).show()
                 val modal =
                     MemoCreateBottomSheet(selectedDay, calendarFragment, memoData.memoEntity)
                 modal.setStyle(
@@ -111,7 +109,6 @@ class CalendarMemoRecyclerViewAdapter(
             }
         } else {
             holder.layoutContentImage!!.setOnClickListener{
-//            Toast.makeText(binding_.root.context, "dd", Toast.LENGTH_SHORT).show()
                 val modal = MemoCreateBottomSheet(selectedDay, calendarFragment, memoData.memoEntity)
                 modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
                 modal.setTargetFragment(calendarFragment, 1)
@@ -128,12 +125,9 @@ class CalendarMemoRecyclerViewAdapter(
                     1-> holder.imageGrid?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     2-> holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
                     3->holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
-//                    3->holder.imageGrid?.layoutManager = CustomLayoutManager(context)
                     4->holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
                     else -> holder.imageGrid?.layoutManager = GridLayoutManager(context,4)
                 }
-//                holder.imageGrid?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-//                holder.imageGrid?.layoutManager = GridLayoutManager(context,2)
                 holder.imageGrid?.adapter = childAdapter
             }
         }
@@ -158,7 +152,6 @@ class CalendarMemoRecyclerViewAdapter(
             CalendarDay.from(dateTime.year, dateTime.monthValue, dateTime.dayOfMonth)
         } catch (e: Exception) {
             e.printStackTrace()
-            // 예외 처리: 날짜 문자열을 파싱하는 동안 오류 발생 시
             null
         }
     }

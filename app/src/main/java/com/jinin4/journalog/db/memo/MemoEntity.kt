@@ -10,6 +10,5 @@ data class MemoEntity(
     @PrimaryKey(autoGenerate = true) var memo_id : Int? = null,
     @ColumnInfo(name="content") val content : String,
     @ColumnInfo(name="timestamp") val timestamp : String,
-//    @ColumnInfo(name="timestamp") val timestamp : Date,
     @ColumnInfo(name="color_id") val color_id : Int
 )

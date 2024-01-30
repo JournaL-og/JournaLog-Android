@@ -180,7 +180,7 @@ class MemoCreateBottomSheet(
         binding.blueBtn.setOnClickListener { filterMemosByColorId(5) }
         binding.indigoBtn.setOnClickListener { filterMemosByColorId(6) }
         binding.puppleBtn.setOnClickListener { filterMemosByColorId(7) }
-//        binding.redBtn.performClick()
+
         return binding.root
     }
 
@@ -195,9 +195,6 @@ class MemoCreateBottomSheet(
                 ContextCompat.getColor(binding.root.context, memoColor),layerDrawable)
         insertedColorId = colorId
     }
-
-
-
 
     companion object {
         const val TAG = "BasicBottomModalSheet"
@@ -223,10 +220,7 @@ class MemoCreateBottomSheet(
      * 사진이 있다면 사진도 insert
      * insert 성공되면 callback줘서 메인쓰레드가 메모가 추가되었음을 알림
      */
-    fun insertMemo() {
-        val currentDateTime = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val formattedDateTime = currentDateTime.format(formatter)
+    private fun insertMemo() {
         val edtCon = binding.edtContent.text.toString()
 
         if (edtCon.isBlank() && uriList.isEmpty()) {
@@ -234,9 +228,7 @@ class MemoCreateBottomSheet(
                     showToast("메모나 사진을 추가해주세요.")
                 }
         } else {
-
             Thread{
-
                 val insertDate = insertedDateTime ?: strDateTime
                 val insertTime = binding.txtTime.text
                 val insertMemoEntity = MemoEntity(null, edtCon, "${insertDate} ${insertTime}:00", insertedColorId)
@@ -299,7 +291,6 @@ class MemoCreateBottomSheet(
             }
             return
         }
-
         val updateDate = insertedDateTime ?: Converter().fromCalendarDay(selectedDate)
         val updateTime = binding.txtTime.text
         var updatedMemoEntity = MemoEntity(memoEntity!!.memo_id, edtCon,"${updateDate} ${updateTime}:00",insertedColorId)
@@ -307,13 +298,6 @@ class MemoCreateBottomSheet(
         Thread{
             memoDao.updateMemo(updatedMemoEntity)
             if (uriList.isNotEmpty()) {
-                // 원래 3장이었는데 1~2장 된 경우 -> photo에서 삭제만 해주면 됨(근데 다 삭제 후 새로운 거 일수도 있음)
-
-                // 원래 3장이었는데 4장 이상이 된 경우 -> 인서트 해줘야댐(이것도 다삭제하고 새로운 4개일 수도,,)
-
-                // 원래 3장이었는데 그대로 3장인 경우 -> uri가 기존과 같은지 비교 후 다르면 삭제, 인서트 다해줘
-
-                // 근데 위의 3 경우를 모두 고려하기 귀찮으니까 그냥 모두 삭제 후 urilist에 있는거로 새로 인서트해줘
                 photoDao.deletePhotoByMemoId(memoEntity.memo_id!!)
                 memoPhotoDao.deleteMemoPhotoByMemoId(memoEntity.memo_id!!)
                 val pathList = uploadImageToFireBase(uriList)
@@ -365,32 +349,8 @@ class MemoCreateBottomSheet(
 
                 }
             )
-
-            // 이지윤: 섬네일 파일 업로드 추가 - 24.01.24
-//            resizeImage(binding.root.context, uri, 150, 150,
-//                onSuccess = { bitmap ->
-//                    // 조정된 이미지 업로드
-//                    FirebaseFileManager.uploadImage(
-//                        bitmap,
-//                        thumbnailPath,
-//                        onSuccess = {
-//
-//                        },
-//                        onFailure = { exception ->
-//                            // 업로드 실패 시
-//                            // TODO: 업로드 실패에 따른 추가 작업 수행
-////                    showToast("이미지 업로드 실패: ${exception.message}")
-//                        }
-//                    )
-//                },
-//                onFailure = { exception ->
-//                    // 오류 처리
-//                }
-//            )
-
         }
         return pathList
-
     }
 
     // 이지윤: 섬네일 파일 업로드 추가 - 24.01.24
@@ -409,7 +369,7 @@ class MemoCreateBottomSheet(
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    // 필요한 경우 여기에 정리 코드 작성
+
                 }
             })
     }
@@ -424,9 +384,7 @@ class MemoCreateBottomSheet(
     private val someActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                // 처리할 로직
                 val data: Intent? = result.data
-
                 if (data != null && data.clipData != null) {
                     // 갤러리에서 가져온 경우
                     handleImageSelection(data)
@@ -435,7 +393,7 @@ class MemoCreateBottomSheet(
                     handleCameraImage(result)
                 }
             } else {
-//                Toast.makeText(binding.root.context, "이미지 불러오기 실패", Toast.LENGTH_SHORT).show()
+                Toast.makeText(binding.root.context, "이미지 불러오기 실패", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutParams
 
+
+// 이상원 - 24.01.22
 class CustomLayoutManager(context: Context) : RecyclerView.LayoutManager() {
 
     override fun generateDefaultLayoutParams(): LayoutParams {

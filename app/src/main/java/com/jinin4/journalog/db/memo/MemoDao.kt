@@ -28,12 +28,6 @@ interface MemoDao {
     fun getMemoByTimestampAsc(timestamp: String): List<MemoEntity>
     @Query("SELECT DISTINCT date(timestamp) AS timestamp FROM memo")
     fun getDistinctCalendarDays(): List<String>
-//    select date('now') as date,
-//    time('now') as time,
-//    datetime('now') as datetime;
-//      date        time        datetime
-//      ----------  ----------  -------------------
-//      2019-11-06  15:03:33    2019-11-06 15:03:33
 
     @Insert
     fun insertMemo(memo: MemoEntity): Long

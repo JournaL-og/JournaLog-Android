@@ -83,7 +83,6 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
         calendarView.topbarVisible = false // topbar 삭제
 
-//        calendarView.setBackgroundColor(resources.getColor(R.color.note))
         val formatter_hangul = DateTimeFormatter.ofPattern("M월 dd일 (EE)")
 
         db = JournaLogDatabase.getInstance(binding.root.context)!!
@@ -92,7 +91,6 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
 
         calendarView.setOnDateChangedListener { widget, date, selected ->
             binding.tvSelectedDate.text = date.date.format(formatter_hangul) // 날짜 클릭 시 좌상단 날짜 변경
-//            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
             getMemos(date)
         }
         calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 선택하기
@@ -104,25 +102,14 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
             val date = CalendarDay.today()
             calendarView.setCurrentDate(date)
             calendarView.selectedDate = date // 오늘 날짜 선택하기
-//            calendarView.setDateSelected(CalendarDay.today(), true)
-//            calendarView.set
-//            calendarView.state().edit().set
             binding.tvSelectedDate.text = date.date.format(formatter_hangul) // 날짜 클릭 시 좌상단 날짜 변경
-//            memoList = memoDao.getMemoByTimestamp(date.date.format(formatter_datetime))
             getMemos(date)
         }
-//        calendarView.setOnMonthChangedListener{
-//
-//        }
         // 메모 있는 날짜 아래에 점 찍기
         dotCalendar()
 
         // 우상단 달력 버튼 클릭 시 달력 펴기 접기
         // 현재 월의 시작일
-//        var endTimeCalendar = Calendar.getInstance()
-//        var selectedDay = calendarView.selectedDate!!
-//        endTimeCalendar.set(Calendar.MONTH, selectedDay.month)
-
         binding.btnCalendar.setOnClickListener {
             if (isWeek) {
                 calendarView.state().edit()
@@ -135,9 +122,7 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
                     .setCalendarDisplayMode(CalendarMode.WEEKS).commit()
                 isWeek = true
             }
-
         }
-
 
 
         binding.fabAddMemo.setOnClickListener {
@@ -185,21 +170,11 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     }
 
     override fun onMemoInserted() {
-        // 모달에서 성공적으로 메모를 추가했을 때의 처리
+        // 모달에서 성공적으로 메모를 추가했을 때의 callback
         getMemos(binding.calendarView.selectedDate!!)
         dotCalendar()
     }
 
-//    fun dotCalendar() {
-//        var decorator: EventDecorator? = null
-//        var DateList : List<CalendarDay>? = null
-//        Thread {
-//            DateList =   memoDao.getDistinctCalendarDays()
-//        }.start()
-//
-//        decorator = EventDecorator(5f, Color.GRAY, DateList ?: setOf())
-//        binding.calendarView.addDecorator(decorator)
-//    }
 
     fun dotCalendar() {
         var decorator: EventDecorator? = null
@@ -214,8 +189,6 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     }
 
     private fun convertDateList(dateList: List<String>): Set<CalendarDay> {
-
-
         return dateList.map {
             CalendarDay.from(LocalDate.parse(it))
         }.toSet()
