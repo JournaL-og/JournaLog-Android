@@ -214,7 +214,11 @@ class CalendarFragment : BaseFragment(),MemoInsertCallback {
     }
 
     private fun convertDateList(dateList: List<String>): Set<CalendarDay> {
-        return dateList.map { CalendarDay.from(LocalDate.parse(it)) }.toSet()
+
+
+        return dateList.map {
+            CalendarDay.from(LocalDate.parse(it))
+        }.toSet()
     }
 
 
