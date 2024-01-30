@@ -33,8 +33,7 @@ import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-//이상원 - 24.01.19, 반정현 - 24.01.22 수정
-
+//이상원 - 24.01.19, 반정현 수정 - 24.01.22, 24.01.25
 class CalendarFragment : BaseFragment(),MemoInsertCallback {
     //private val viewModel: ThemeViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding

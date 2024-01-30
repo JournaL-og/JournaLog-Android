@@ -1,8 +1,8 @@
 package com.jinin4.journalog.firebase.storage
 
 
-import android.net.Uri
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
@@ -10,7 +10,11 @@ import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 

@@ -3,15 +3,13 @@ package com.jinin4.journalog.setting
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
-import com.jinin4.journalog.R
 import com.jinin4.journalog.databinding.DialogPasswordVerificationBinding
 import com.jinin4.journalog.utils.PasswordUtils
 import kotlinx.coroutines.launch
+
 // 반정현 작성 - 24.01.27
 class PasswordVerificationDialogFragment(private val onVerificationResult: (Boolean) -> Unit) : DialogFragment() {
     private lateinit var binding: DialogPasswordVerificationBinding

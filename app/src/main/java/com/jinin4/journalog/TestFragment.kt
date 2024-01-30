@@ -6,12 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.storage
-import com.jinin4.journalog.databinding.FragmentPhotoBinding
 import com.jinin4.journalog.databinding.FragmentTestBinding
 import com.jinin4.journalog.db.memo.MemoDao
 import com.jinin4.journalog.db.memo.MemoEntity

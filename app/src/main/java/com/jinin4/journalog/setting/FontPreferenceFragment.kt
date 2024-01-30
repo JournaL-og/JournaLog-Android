@@ -47,7 +47,7 @@ class FontPreferenceFragment : Fragment() {
             val button = Button(requireContext())
             button.text = fontType
 
-            // 현재 폰트에 대한 Typeface 얻기
+            // 현재 폰트에 대한 Typeface 얻기 : 각 폰트 버튼마다 해당 폰트 적용
             val typeface = ResourcesCompat.getFont(requireContext(), resources.getIdentifier(fontType, "font", requireContext().packageName))
             button.setTypeface(typeface)
             if (fontType == "nanumpen") button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
@@ -65,7 +65,7 @@ class FontPreferenceFragment : Fragment() {
             button.setOnClickListener {
                 val selectedFont = fontType
 
-                // 저장된 데이터를 업데이트
+                // 저장된 데이터를 업데이트(폰트 설정)
                 lifecycleScope.launch {
                     context?.dataStore?.updateData { preferences ->
                         preferences.toBuilder().setFontType(selectedFont).build()
@@ -88,7 +88,7 @@ class FontPreferenceFragment : Fragment() {
 
         fontSizeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // 사용자가 조작하는 동안 실시간으로 DataStore에 업데이트
+                // 사용자가 조작하는 동안 실시간으로 DataStore에 업데이트(글자 크기 설정)
                 if (fromUser) {
                     val selectedFontSize = progress
                     lifecycleScope.launch {
@@ -114,7 +114,7 @@ class FontPreferenceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 처음 화면이 생성될 때 FontPreviewFragment를 불러옵니다.
+        // 처음 화면이 생성될 때 FontPreviewFragment를 불러오기
         val newFragment = FontPreviewFragment()
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_preview, newFragment)
@@ -123,6 +123,7 @@ class FontPreferenceFragment : Fragment() {
         // Preview container 보이게 설정
         activity?.findViewById<FrameLayout>(R.id.container_preview)?.visibility = View.VISIBLE
 
+        // DataStore에서 fontType과 fontSize 값을 가져와서 두 값을 Pair 형태로 묶기
         val fontSettingsFlow = context?.dataStore?.data?.map { preferences ->
             Pair(preferences.fontType, preferences.fontSize)
         }
